@@ -2,9 +2,9 @@ package eu.appbucket.rothar.core.domain.report;
 
 import java.util.Date;
 
-import eu.appbucket.rothar.web.domain.report.ReportEntry;
+import eu.appbucket.rothar.web.domain.report.ReportData;
 
-public class ReportData {
+public class ReportEntry {
 
 	private String assetId;
 	private double latitude;
@@ -43,8 +43,8 @@ public class ReportData {
 		this.created = created;
 	}
 	
-	public static ReportData fromReportEntry(ReportEntry reportEntry) {
-		ReportData reportData = new ReportData();
+	public static ReportEntry fromReportEntry(ReportData reportEntry) {
+		ReportEntry reportData = new ReportEntry();
 		reportData.setAssetId(reportEntry.getAssetId());
 		reportData.setLongitude(reportEntry.getLongitude());
 		reportData.setLatitude(reportEntry.getLatitude());

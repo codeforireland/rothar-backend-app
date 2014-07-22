@@ -2,9 +2,9 @@ package eu.appbucket.rothar.web.domain.report;
 
 import java.util.Date;
 
-import eu.appbucket.rothar.core.domain.report.ReportData;
+import eu.appbucket.rothar.core.domain.report.ReportEntry;
 
-public class ReportEntry {
+public class ReportData {
 
 	private String assetId;
 	private double latitude;
@@ -52,12 +52,17 @@ public class ReportEntry {
 		this.url = url;
 	}
 	
-	public static ReportEntry fromReportData(ReportData data) {
-		ReportEntry entry = new ReportEntry();
+	public static ReportData fromReportEntry(ReportEntry data) {
+		ReportData entry = new ReportData();
 		entry.setAssetId(data.getAssetId());
 		entry.setLongitude(data.getLongitude());
 		entry.setLatitude(data.getLatitude());
 		entry.setCreated(data.getCreated());
+		entry.setUrl(
+				"https://maps.google.com/?q=" 
+				+ data.getLatitude() 
+				+ "," 
+				+ data.getLongitude());
 		return entry;
 	}
 }
