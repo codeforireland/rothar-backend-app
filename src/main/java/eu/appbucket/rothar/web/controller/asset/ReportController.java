@@ -42,7 +42,7 @@ public class ReportController {
 		reportEntry.setCreated(new Date());
 		reportEntry.setAssetId(assetId);
 		reportService.saveReportEntry(reportEntry);
-		LOGGER.info("postReportEntry.");
+		LOGGER.info("postReportEntry");
 	}
 	
 	@RequestMapping(value = "v1/asset/{assetId}/reports", method = RequestMethod.GET)
