@@ -35,11 +35,13 @@ public class ReportController {
 	
 	@RequestMapping(value = "v1/asset/{assetId}/reports", method = RequestMethod.POST)
 	@ResponseBody
-	public void postReportEntry(@RequestBody ReportData reportEntry) {
+	public void postReportEntry(@PathVariable String assetId, 
+			@RequestBody ReportData reportEntryData) {
 		LOGGER.info("postReportEntry");
-		ReportEntry reportData = ReportEntry.fromReportEntry(reportEntry);
-		reportData.setCreated(new Date());
-		reportService.saveReportEntry(reportData);
+		ReportEntry reportEntry = ReportEntry.fromReportEntry(reportEntryData);
+		reportEntry.setCreated(new Date());
+		reportEntry.setAssetId(assetId);
+		reportService.saveReportEntry(reportEntry);
 		LOGGER.info("postReportEntry");
 	}
 	
