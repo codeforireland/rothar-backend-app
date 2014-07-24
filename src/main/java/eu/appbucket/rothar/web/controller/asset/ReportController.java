@@ -37,12 +37,12 @@ public class ReportController {
 	@ResponseBody
 	public void postReportEntry(@PathVariable String assetId, 
 			@RequestBody ReportData reportEntryData) {
-		LOGGER.info("postReportEntry");
+  		LOGGER.info("postReportEntry");
 		ReportEntry reportEntry = ReportEntry.fromReportEntry(reportEntryData);
 		reportEntry.setCreated(new Date());
 		reportEntry.setAssetId(assetId);
 		reportService.saveReportEntry(reportEntry);
-		LOGGER.info("postReportEntry");
+		LOGGER.info("postReportEntry.");
 	}
 	
 	@RequestMapping(value = "v1/asset/{assetId}/reports", method = RequestMethod.GET)
