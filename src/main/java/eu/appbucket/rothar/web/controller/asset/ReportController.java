@@ -59,14 +59,15 @@ public class ReportController {
 		sort = InputSanitizer.resoleveSort(sort);
 		order = InputSanitizer.resoleveOrder(order);
 		ReportEntryFilter reportFilter =  new ReportEntryFilter.Builder()
+				.forAsset(assetId)
 				.fromOffset(offset).withLimit(limit)
 				.sortBy(sort).orderBy(order).build();
-		ReportData entry = null;
+		ReportData reportData = null;
 		List<ReportData> reportsData = new ArrayList<ReportData>();
 		List<ReportEntry> reportsEntries = this.reportService.findReportEntries(reportFilter);
 		for(ReportEntry reportEntry: reportsEntries) {
-			entry = ReportData.fromReportEntry(reportEntry);
-			reportsData.add(entry);
+			reportData = ReportData.fromReportEntry(reportEntry);
+			reportsData.add(reportData);
 		}
 		return reportsData;
 	}
