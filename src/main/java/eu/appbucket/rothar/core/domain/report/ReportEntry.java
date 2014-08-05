@@ -6,16 +6,25 @@ import eu.appbucket.rothar.web.domain.report.ReportData;
 
 public class ReportEntry {
 
-	private String assetId;
+	private Integer assetId;
 	private double latitude;
 	private double longitude;
 	private Date created;
+	private Integer reporterId;
+	
+	public Integer getReporterId() {
+		return reporterId;
+	}
 
-	public String getAssetId() {
+	public void setReporterId(Integer reporterId) {
+		this.reporterId = reporterId;
+	}
+
+	public Integer getAssetId() {
 		return assetId;
 	}
 
-	public void setAssetId(String assetId) {
+	public void setAssetId(Integer assetId) {
 		this.assetId = assetId;
 	}
 
@@ -46,6 +55,7 @@ public class ReportEntry {
 	public static ReportEntry fromReportEntry(ReportData reportEntry) {
 		ReportEntry reportData = new ReportEntry();
 		reportData.setAssetId(reportEntry.getAssetId());
+		reportData.setReporterId(reportEntry.getReporterId());
 		reportData.setLongitude(reportEntry.getLongitude());
 		reportData.setLatitude(reportEntry.getLatitude());
 		reportData.setCreated(reportEntry.getCreated());

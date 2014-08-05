@@ -1,0 +1,10 @@
+﻿drop table `users`;
+
+CREATE TABLE `users` (
+  `user_id` int(10) unsigned NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

@@ -2,7 +2,8 @@
 
 CREATE TABLE `reports` (
   `report_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `asset_id` varchar(45) NOT NULL,
+  `asset_id` int(10) unsigned NOT NULL,
+  `reporter_id` int(10) unsigned NOT NULL,
   `latitude` double NOT NULL,
   `longitude` double NOT NULL,
   `created` datetime NOT NULL,

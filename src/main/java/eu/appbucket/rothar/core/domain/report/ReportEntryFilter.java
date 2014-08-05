@@ -6,7 +6,8 @@ public class ReportEntryFilter {
 	private int limit;
 	private String sort;
 	private String order;
-	private String assetId;
+	private Integer assetId;
+	private Integer userId;
 	
 	private ReportEntryFilter() {
 	}
@@ -43,12 +44,20 @@ public class ReportEntryFilter {
 		this.order = order;
 	}
 	
-	public String getAssetId() {
+	public Integer getAssetId() {
 		return assetId;
 	}
 
-	public void setAssetId(String assetId) {
+	public void setAssetId(Integer assetId) {
 		this.assetId = assetId;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 
@@ -58,7 +67,8 @@ public class ReportEntryFilter {
 		private int limit;
 		private String sort;
 		private String order;
-		private String assetId;
+		private Integer assetId;
+		private Integer userId;
 		
 		public Builder fromOffset(int offset) {
 			this.offset = offset;
@@ -80,8 +90,13 @@ public class ReportEntryFilter {
 			return this;
 		}
 		
-		public Builder forAsset(String assetId) {
+		public Builder forAsset(Integer assetId) {
 			this.assetId = assetId; 
+			return this;
+		}
+		
+		public Builder ownerBy(Integer userId) {
+			this.userId = userId; 
 			return this;
 		}
 		
@@ -92,6 +107,7 @@ public class ReportEntryFilter {
 			filter.setOrder(this.order);
 			filter.setSort(this.sort);
 			filter.setAssetId(this.assetId);
+			filter.setUserId(this.userId);
 			return filter;
 		}
 	};

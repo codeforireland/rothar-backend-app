@@ -49,7 +49,7 @@ public class ReportDaoImpl implements ReportDao {
 	private static final class ReportMapper implements RowMapper<ReportEntry> {
 		public ReportEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
 			ReportEntry report = new ReportEntry();
-			report.setAssetId(rs.getString("asset_id"));
+			report.setAssetId(rs.getInt("asset_id"));
 			report.setLongitude(rs.getDouble("longitude"));
 			report.setLatitude(rs.getDouble("latitude"));
 			report.setCreated(rs.getTimestamp("created"));
@@ -59,21 +59,30 @@ public class ReportDaoImpl implements ReportDao {
 	
 	private static final class ReportEntrySelectQueryBuilder {
 		
-		private String assetId;
+		private Integer assetId;
+		private Integer ownerId;
 		private int offset;
 		private int limit;
 		private String order;
 		private String sort;
 		
 		private final static String SQL_SELECT_REPORT_ENTRIES =
-				"SELECT * FROM reports "
-				+ "WHERE asset_id = '%s' "
+				"SELECT * FROM reports, assets"
+				+ "WHERE "
+				+ "reports.asset_id = '%d' "
+				+ "AND assets.user_id = '%d' "
+				+ "AND assets.asset_id = reports.asset_id "
 				+ "ORDER BY %s %s "
 				+ "LIMIT %d "
 				+ "OFFSET %d";
 		
-		public ReportEntrySelectQueryBuilder forAssetId(String assetId) {
+		public ReportEntrySelectQueryBuilder forAssetId(Integer assetId) {
 			this.assetId = assetId;
+			return this;
+		}
+		
+		public ReportEntrySelectQueryBuilder forOwnerId(Integer ownerId) {
+			this.ownerId = ownerId;
 			return this;
 		}
 		
@@ -101,6 +110,7 @@ public class ReportDaoImpl implements ReportDao {
 			return String.format(
 					SQL_SELECT_REPORT_ENTRIES, 
 					this.assetId,
+					this.ownerId,
 					this.sort, this.order,
 					this.limit, this.offset);
 		}
