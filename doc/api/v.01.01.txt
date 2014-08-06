@@ -6,15 +6,14 @@
 curl -i -H \
 	"Content-Type: application/json" \
 	-X POST -d '{"latitude":"53.271534", "longitude":"-6.315946"}' \
-	http://localhost:8080/Rothar/v1/asset/F4C36EAC-0767-11E4-A4ED-B2227CCE2B54/reports
+	http://localhost:8080/Rothar/v1/users/2/assets/20/reports
 
 ###################################################
 # get list of found reports about stolen bicycles #
 ###################################################
 
-
 curl -i -H \
 	"Content-Type: application/json" \
 	-X GET \
-	http://localhost:8080//Rothar/v1/asset/F4C36EAC-0767-11E4-A4ED-B2227CCE2B54/reports?limit=2\&order=desc\&sort=created
+	http://localhost:8080/Rothar/v1/asset/F4C36EAC-0767-11E4-A4ED-B2227CCE2B54/reports?limit=2\&order=desc\&sort=created
 

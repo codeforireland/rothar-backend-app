@@ -38,15 +38,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	private void assertUserExist(int userId) {
-		UserEntry user = null;
-		try {
-			user = userService.findUser(userId);
-		} catch (UserDaoException e) {
-			throw new ServiceException("Can't find user: " + userId);
-		}
-		if(user.getUserId() == null) {
-			throw new ServiceException("User: " + user.getUserId() + " doesn't exists.");
-		}
+		userService.findUser(userId);
 	}
 	
 	private void assertAssetDoesntExist(Integer userId, Integer assetId) {

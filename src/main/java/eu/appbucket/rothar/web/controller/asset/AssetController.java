@@ -32,7 +32,7 @@ public class AssetController {
 		this.assetService = assetService;
 	}
 	
-	@RequestMapping(value = "v1/users/{$ownerId}/assets", 
+	@RequestMapping(value = "v1/users/{ownerId}/assets", 
 			method = RequestMethod.POST)
 	@ResponseBody
 	public void createOwnerAsset(
@@ -43,7 +43,7 @@ public class AssetController {
 		assetService.createAsset(assetEntry);
 	}
 	
-	@RequestMapping(value = "v1/users/{$ownerId}/assets/{$assetId}", 
+	@RequestMapping(value = "v1/users/{ownerId}/assets/{assetId}", 
 			method = RequestMethod.PUT)
 	@ResponseBody
 	public void updateOwnerAsset(
@@ -57,7 +57,7 @@ public class AssetController {
 		assetService.updateAsset(assetEntry);
 	}
 	
-	@RequestMapping(value = "v1/user/{$ownerId}/asset", method = RequestMethod.GET)
+	@RequestMapping(value = "v1/user/{ownerId}/asset", method = RequestMethod.GET)
 	@ResponseBody
 	public List<AssetData> getOwnerAssets(
 			@PathVariable String ownerId,

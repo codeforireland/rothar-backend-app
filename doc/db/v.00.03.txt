@@ -8,3 +8,13 @@ CREATE TABLE `users` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+insert into `users` (`user_id`, `email`, `name`, `created`) 
+values (1, 'adam@bednarski.pl', 'Adam Bednarski', now()); 
+
+insert into users (user_id, email, name, created) 
+values (2, 'philip@murphy.ie', 'Philip Murphy', now()); 
+
+insert into users (user_id, email, name, created) 
+values (3, 'mark@montgomerie.nz', 'Mark Montgomerie', now());
+

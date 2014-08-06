@@ -21,9 +21,12 @@ public class UserServiceImpl implements UserService {
 	public UserEntry findUser(int userId) {
 		UserEntry user = null;
 		try {
-			userDao.findUserById(userId);
+			user = userDao.findUserById(userId);
 		} catch (UserDaoException e) {
 			throw new ServiceException("Can't retrieve user: " + userId, e);
+		}
+		if(user.getUserId() == null) {
+			throw new ServiceException("User: " + userId + " doesn't exists.");
 		}
 		return user;
 	}

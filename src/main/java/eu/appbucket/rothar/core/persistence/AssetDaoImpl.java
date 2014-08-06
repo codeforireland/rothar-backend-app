@@ -83,10 +83,11 @@ public class AssetDaoImpl implements AssetDao {
 			asset = jdbcTempalte.queryForObject(FIND_SINGLE_ASSET_QUERY, 
 					new AssetEntryMapper(), userId, assetId);	
 		} catch (DataAccessException e) {
-			throw new AssetDaoException("Can't find asset " + assetId, e);
+			throw new AssetDaoException("Can't find asset " + assetId + " for user: " + userId, e);
 		}
 		if(asset == null) {
-			throw new AssetDaoException("Asset: " + assetId + " doesn't exists.");
+			asset = new AssetEntry();
+			// throw new AssetDaoException("Asset: " + assetId + " for user: " + userId + " doesn't exists.");
 		}
 		return asset;
 	}

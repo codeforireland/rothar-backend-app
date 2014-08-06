@@ -20,4 +20,12 @@ JDBC_USERNAME=<USER>
 JDBC_PASSWORD=<PASSWORD>
 
 b) in windows: TODO
+
+3) Set tomcat debug mode (only for development)
+
+a) in linux edit file "/etc/default/tomcat7/startup.sh" and change last line from:
+exec "$PRGDIR"/"$EXECUTABLE" start "$@"
+to
+exec "$PRGDIR"/"$EXECUTABLE" jpda start "$@"
  
+ b) in windows: TODO
