@@ -3,13 +3,13 @@ package eu.appbucket.rothar.core.domain.asset;
 
 public class AssetFilter {
 	
-	private String userId;
+	private Integer userId;
 	private int offset;
 	private int limit;
 	private String sort;
 	private String order;
 	
-	private AssetFilter(String userId) {
+	private AssetFilter(Integer userId) {
 		this.userId = userId;
 	}
 	
@@ -29,7 +29,7 @@ public class AssetFilter {
 		return order;
 	}
 	
-	public String getUserId() {
+	public Integer getUserId() {
 		return userId;
 	}
 	
@@ -57,7 +57,6 @@ public class AssetFilter {
 
 	public static class Builder {
 		
-		private String userId;
 		private int offset;
 		private int limit;
 		private String sort;
@@ -83,7 +82,7 @@ public class AssetFilter {
 			return this;
 		}
 		
-		public AssetFilter buildFilterForUser(String userId) {
+		public AssetFilter buildFilterForUser(Integer userId) {
 			AssetFilter filter = new AssetFilter(userId);
 			filter.setLimit(this.limit);
 			filter.setOffset(this.offset);

@@ -104,7 +104,6 @@ public class AssetEntry {
 		return true;
 	}
 
-
 	public static AssetEntry fromAssetData(AssetData data) {
 		AssetEntry entry = new AssetEntry();
 		entry.setAssetId(entry.getAssetId());

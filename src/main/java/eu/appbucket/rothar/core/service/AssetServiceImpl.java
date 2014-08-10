@@ -30,83 +30,98 @@ public class AssetServiceImpl implements AssetService {
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-	
-	public void createAsset(AssetEntry asset) {
-		assertUserExist(asset.getUserId());
-		assertAssetDoesntExist(asset.getUserId(), asset.getAssetId());
-		createAssetEntry(asset);
+
+	public boolean isAssetExisting(AssetEntry assetToCheckForExistence) throws ServiceException {
+		boolean assetExists = false;
+		int assetId = assetToCheckForExistence.getAssetId();
+		try {
+			assetExists = assetDao.isAssetExisting(assetId);
+		} catch (AssetDaoException assetDaoException) {
+			throw new ServiceException("Problem checking existence of the asset: " + assetId, assetDaoException);
+		}
+		return assetExists;
 	}
 
-	private void assertUserExist(int userId) {
-		userService.findUser(userId);
+	public boolean isAssetOwnedByUser(AssetEntry assetToCheckForOwnership) throws ServiceException {
+		boolean assetOwnedByTheUser = false;
+		int assetId = assetToCheckForOwnership.getAssetId();
+		int userId = assetToCheckForOwnership.getUserId();
+		try {
+			assetOwnedByTheUser = assetDao.isAssetOwnedByUser(assetId, userId);
+		} catch (AssetDaoException assetDaoException) {
+			throw new ServiceException("Problem checking existence of the asset: " + assetId + " for the user: " + userId, assetDaoException);
+		}
+		return assetOwnedByTheUser;
 	}
 	
-	private void assertAssetDoesntExist(Integer userId, Integer assetId) {
-		AssetEntry existingAsset = null;
-		try {
-			existingAsset = assetDao.findAssetByUserAndAssetId(userId, assetId);
-		} catch (UserDaoException e) {
-			throw new ServiceException("Can't find asset: " + assetId);
-		}
-		if(existingAsset.getAssetId() != null) {
-			throw new ServiceException("Asset: " + assetId + " already exists.");
+	public void createAsset(AssetEntry assetToBeCreated) throws ServiceException {
+		assertUserExist(assetToBeCreated.getUserId());
+		createNewAsset(assetToBeCreated);
+	}
+
+	private void assertUserExist(int userId) throws ServiceException {
+		UserEntry userToCheckForExistence = new UserEntry();
+		userToCheckForExistence.setUserId(userId);
+		boolean userExists = userService.isUserExisting(userToCheckForExistence);
+		if(!userExists) {
+			throw new ServiceException("User: " + userId + " doesn't exists.");
 		}
 	}
 	
-	private void assertAssetExist(Integer userId, Integer assetId) {
-		AssetEntry existingAsset = null;
+	private void createNewAsset(AssetEntry asset) throws ServiceException {
+		asset.setStatusId(AssetStatus.WITH_OWNER.getStatusId());
 		try {
-			existingAsset = assetDao.findAssetByUserAndAssetId(userId, assetId);
-		} catch (UserDaoException e) {
-			throw new ServiceException("Can't find asset: " + assetId);
+			assetDao.createNewAsset(asset);
+		} catch (AssetDaoException assetDaoException) {
+			throw new ServiceException("Can't create asset " + asset.getUuid() + " for the user: " + asset.getUserId(), assetDaoException);
 		}
-		if(existingAsset.getAssetId() == null) {
+	}
+	
+	public void updateAsset(AssetEntry assetToBeUpdates) {
+		assertAssetExist(assetToBeUpdates.getAssetId());
+		assertUserExist(assetToBeUpdates.getUserId());
+		assertAssetIsOwnerByTheUser(assetToBeUpdates.getAssetId(), assetToBeUpdates.getUserId());
+		updateExistingAsset(assetToBeUpdates);
+	}
+	
+	private void assertAssetExist(Integer assetId) throws ServiceException {
+		AssetEntry assetToCheckForExistence = new AssetEntry();
+		assetToCheckForExistence.setAssetId(assetId);
+		boolean assetExists = isAssetExisting(assetToCheckForExistence);
+		if(!assetExists) {
 			throw new ServiceException("Asset: " + assetId + " doesn't exists.");
 		}
 	}
 	
-	private void createAssetEntry(AssetEntry assetToCreate) {
-		assetToCreate.setStatusId(AssetStatus.WITH_OWNER.getStatusId());
-		try {
-			assetDao.createNewAsset(assetToCreate);
-		} catch (AssetDaoException e) {
-			throw new ServiceException("Can't create asset for user: " + assetToCreate.getUserId());
+	private void assertAssetIsOwnerByTheUser(Integer assetId, Integer userId) throws ServiceException {
+		AssetEntry assetToCheckForOwnership = new AssetEntry();
+		assetToCheckForOwnership.setAssetId(assetId);
+		assetToCheckForOwnership.setUserId(userId);
+		boolean assetIsOwnedByUser = this.isAssetOwnedByUser(assetToCheckForOwnership);
+		if(!assetIsOwnedByUser) {
+			throw new ServiceException("Asset: " + assetId + " is not owned by user: " + userId);
 		}
-	}
-	
-	public void updateAsset(AssetEntry updatedAsset) {
-		assertUserExist(updatedAsset.getUserId());
-		assertAssetExist(updatedAsset.getUserId(), updatedAsset.getAssetId());
-		fillMissingInformation(updatedAsset);
-		updateExistingAsset(updatedAsset);
-	}
-	
-	private AssetEntry fillMissingInformation(AssetEntry assetToFill) throws ServiceException {
-		AssetEntry fullyPopulatedAsset = null;
-		try {
-			fullyPopulatedAsset = assetDao.findAssetByUserAndAssetId(assetToFill.getUserId(), assetToFill.getAssetId());
-		} catch (UserDaoException e) {
-			throw new ServiceException("Can't find asset: " + assetToFill.getAssetId());
-		}
-		if(fullyPopulatedAsset.getAssetId() == null) {
-			throw new ServiceException("Asset: " + assetToFill.getAssetId() + " doesn't exists.");
-		}
-		AssetStatus status = AssetStatus.getStatusEnumById(assetToFill.getStatusId());
-		if(status == null) {
-			assetToFill.setStatusId(fullyPopulatedAsset.getStatusId());
-		}
-		if(StringUtils.isEmpty(assetToFill.getDescription())) {
-			assetToFill.setDescription(fullyPopulatedAsset.getDescription());
-		}
-		return assetToFill;
 	}
 	
 	private void updateExistingAsset(AssetEntry updatedAsset) throws ServiceException {
 		try {
 			assetDao.updateExistingAsset(updatedAsset);	
-		} catch (AssetDaoException e) {
-			throw new ServiceException("Can't update asset: " + updatedAsset.getAssetId());
+		} catch (AssetDaoException assetDaoException) {
+			throw new ServiceException("Can't update asset: " + updatedAsset.getAssetId(), assetDaoException);
 		}
+	}
+
+	public AssetEntry findAsset(Integer userId, Integer assetId) throws ServiceException {
+		assertAssetExist(assetId);
+		assertUserExist(userId);
+		assertAssetIsOwnerByTheUser(assetId, userId);
+		AssetEntry foundAsset = null;
+		try {
+			foundAsset = assetDao.findAssetByUserAndAssetId(userId, assetId);	
+		} catch (AssetDaoException assetDaoException) {
+			throw new ServiceException("Can't find asset: " + assetId + " for user: " + userId, assetDaoException);
+		}
+		return foundAsset;
 	}
 	
 	public List<AssetEntry> findAssets(AssetFilter filter) {
@@ -117,10 +132,5 @@ public class AssetServiceImpl implements AssetService {
 			throw new ServiceException("Can't find find asset for user : " + filter.getUserId());
 		}
 		return assets;
-	}
-	
-	public AssetEntry findAsset(Integer userId, Integer assetId) {
-		AssetEntry foundAsset = assetDao.findAssetByUserAndAssetId(userId, assetId);
-		return foundAsset;
 	}
 }
