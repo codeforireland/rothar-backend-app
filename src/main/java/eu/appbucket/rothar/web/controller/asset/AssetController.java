@@ -60,7 +60,7 @@ public class AssetController {
 	@RequestMapping(value = "v1/user/{ownerId}/asset", method = RequestMethod.GET)
 	@ResponseBody
 	public List<AssetData> getOwnerAssets(
-			@PathVariable String ownerId,
+			@PathVariable Integer ownerId,
 			@RequestParam(value = "offset", required = false) Integer offset, 
 			@RequestParam(value = "limit", required = false) Integer limit, 
 			@RequestParam(value = "sort", required = false) String sort, 

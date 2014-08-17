@@ -20,6 +20,15 @@ public interface UserService {
 	boolean isUserExisting(UserEntry userToCheckForExistence) throws ServiceException;
 	
 	
+	/**
+	 * Checks if user is the owner of the asset.
+	 * 
+	 * @param ownerId id of the 
+	 * @param assetId
+	 * @return
+	 * @throws ServiceException
+	 */
 	boolean isUserOwnerOfAsset(int ownerId, int assetId) throws ServiceException;
-	UserEntry findUser(int userId) throws ServiceException;
+	
+	UserEntry findUserById(int userId) throws ServiceException;
 }

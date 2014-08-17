@@ -18,7 +18,19 @@ public class UserServiceImpl implements UserService {
 		this.userDao = userDao;
 	}
 	
-	public UserEntry findUser(int userId) {
+	public boolean isUserExisting(UserEntry userToCheckForExistence)
+			throws ServiceException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean isUserOwnerOfAsset(int ownerId, int assetId)
+			throws ServiceException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	public UserEntry findUserById(int userId) {
 		UserEntry user = null;
 		try {
 			user = userDao.findUserById(userId);
@@ -30,4 +42,6 @@ public class UserServiceImpl implements UserService {
 		}
 		return user;
 	}
+
+
 }
