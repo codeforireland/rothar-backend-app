@@ -68,12 +68,12 @@ public class ReportDaoImpl implements ReportDao {
 		private String sort;
 		
 		private final static String SQL_SELECT_REPORT_ENTRIES =
-				"SELECT * FROM reports, assets"
+				"SELECT * FROM reports, assets "
 				+ "WHERE "
 				+ "reports.asset_id = '%d' "
 				+ "AND assets.user_id = '%d' "
 				+ "AND assets.asset_id = reports.asset_id "
-				+ "ORDER BY %s %s "
+				+ "ORDER BY reports.%s %s "
 				+ "LIMIT %d "
 				+ "OFFSET %d";
 		
