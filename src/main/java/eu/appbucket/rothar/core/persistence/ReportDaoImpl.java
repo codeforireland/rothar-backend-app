@@ -38,6 +38,7 @@ public class ReportDaoImpl implements ReportDao {
 	public List<ReportEntry> findEntries(ReportEntryFilter filter) {
 		String query = new ReportEntrySelectQueryBuilder()
 			.forAssetId(filter.getAssetId())
+			.forOwnerId(filter.getUserId())
 			.startingFrom(filter.getOffset())
 			.withTotal(filter.getLimit())
 			.sortBy(filter.getSort())
@@ -70,8 +71,8 @@ public class ReportDaoImpl implements ReportDao {
 		private final static String SQL_SELECT_REPORT_ENTRIES =
 				"SELECT * FROM reports, assets "
 				+ "WHERE "
-				+ "reports.asset_id = '%d' "
-				+ "AND assets.user_id = '%d' "
+				+ "reports.asset_id = %d "
+				+ "AND assets.user_id = %d "
 				+ "AND assets.asset_id = reports.asset_id "
 				+ "ORDER BY reports.%s %s "
 				+ "LIMIT %d "

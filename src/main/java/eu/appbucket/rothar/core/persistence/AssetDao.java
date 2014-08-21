@@ -10,7 +10,7 @@ import eu.appbucket.rothar.core.service.exception.ServiceException;
 public interface AssetDao {
 	
 	/**
-	 * Checks if asset exists.
+	 * Checks if asset exists based on asset id.
 	 * 
 	 * @param assetId ID of the asset to check
 	 * @return TRUE if asset exists, FALSE if not
@@ -18,6 +18,16 @@ public interface AssetDao {
 	 * @throws AssetDaoException if there was general DB problem while checking the existence of asset
 	 */
 	boolean isAssetExisting(int assetId) throws AssetDaoException;
+
+	/**
+	 * Checks if asset exists base on asset uuid.
+	 * 
+	 * @param uuid unique id of the asset to check
+	 * @return TRUE if asset exists, FALSE if not
+	 * 
+	 * @throws AssetDaoException if there was general DB problem while checking the existence of asset
+	 */
+	boolean isAssetExisting(String uuid) throws AssetDaoException;
 	
 	/**
 	 * Checks if asset is owned by user.

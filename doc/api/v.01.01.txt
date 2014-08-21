@@ -1,19 +1,28 @@
 
-##############################
-# post stolen bicycle report #
-##############################
+## ASSETS ##
 
-curl -i -H \
-	"Content-Type: application/json" \
-	-X POST -d '{"latitude":"53.271534", "longitude":"-6.315946"}' \
-	http://localhost:8080/Rothar/v1/users/2/assets/20/reports
-
-###################################################
-# get list of found reports about stolen bicycles #
-###################################################
+# get list of the user asset
 
 curl -i -H \
 	"Content-Type: application/json" \
 	-X GET \
-	http://localhost:8080/Rothar/v1/asset/F4C36EAC-0767-11E4-A4ED-B2227CCE2B54/reports?limit=2\&order=desc\&sort=created
+	http://localhost:8080/Rothar/v1/users/2/assets
 
+# create the asset for user
+
+curl -i -H \
+	"Content-Type: application/json" \
+	-X POST -d '{"uuid":"39efdca2-918a-428d-8ad2-daff67ee1c9e", "minor":"1", "major":"1", "description":"red bike"}' \
+	http://localhost:8080/Rothar/v1/users/1/assets
+
+ 
+## USERS ##
+
+## REPORTS ##
+
+# create the report for asset
+
+curl -i -H \
+	"Content-Type: application/json" \
+	-X POST -d '{"latitude":"53.271534", "longitude":"-6.315946"}' \
+	http://localhost:8080/Rothar/v1/users/2/assets/20/reports 

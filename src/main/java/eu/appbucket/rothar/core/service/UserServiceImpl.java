@@ -3,6 +3,7 @@ package eu.appbucket.rothar.core.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import eu.appbucket.rothar.core.domain.asset.AssetEntry;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.persistence.UserDao;
 import eu.appbucket.rothar.core.persistence.exception.UserDaoException;
@@ -18,30 +19,37 @@ public class UserServiceImpl implements UserService {
 		this.userDao = userDao;
 	}
 	
-	public boolean isUserExisting(UserEntry userToCheckForExistence)
-			throws ServiceException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean isUserOwnerOfAsset(int ownerId, int assetId)
-			throws ServiceException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isUserExisting(UserEntry userToCheckForExistence) throws ServiceException {
+		boolean userExists = false;
+		int userId = userToCheckForExistence.getUserId();
+		try {
+			userExists = userDao.isUserExisting(userId);
+		} catch (UserDaoException userDaoException) {
+			throw new ServiceException("Problem checking existence of the userser: " + userId, userDaoException);
+		}	
+		return userExists;
 	}
 	
-	public UserEntry findUserById(int userId) {
-		UserEntry user = null;
+	public UserEntry findUser(int userId) throws ServiceException {
+		assertUserExist(userId);
+		UserEntry foundUser = null;
 		try {
-			user = userDao.findUserById(userId);
-		} catch (UserDaoException e) {
-			throw new ServiceException("Can't retrieve user: " + userId, e);
+			foundUser = userDao.findUserById(userId);
+		} catch (UserDaoException userDaoException) {
+			throw new ServiceException("Can't find user: " + userId, userDaoException);
 		}
-		if(user.getUserId() == null) {
+		if(foundUser.getUserId() == null) {
 			throw new ServiceException("User: " + userId + " doesn't exists.");
 		}
-		return user;
+		return foundUser;
 	}
 
-
+	private void assertUserExist(Integer userId) throws ServiceException {
+		UserEntry userToCheckForExistence = new UserEntry();
+		userToCheckForExistence.setUserId(userId);
+		boolean userExists = isUserExisting(userToCheckForExistence);
+		if(!userExists) {
+			throw new ServiceException("User: " + userId + " doesn't exists.");
+		}
+	}
 }

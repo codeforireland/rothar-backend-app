@@ -14,6 +14,7 @@ import eu.appbucket.rothar.core.domain.asset.AssetEntry;
 import eu.appbucket.rothar.core.domain.asset.AssetFilter;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.persistence.AssetDao;
+import eu.appbucket.rothar.core.persistence.exception.AssetDaoException;
 import eu.appbucket.rothar.core.service.exception.ServiceException;
 
 public class AssetServiceImplTest {
@@ -34,7 +35,7 @@ public class AssetServiceImplTest {
 		test.setUserService(userServiceMock);
 		testAsset.setAssetId(1);
 		testAsset.setUserId(1);
-		testAsset.setUuid("3");
+		testAsset.setUuid("2c1b80da-a69b-453b-9d06-94e499e416f1");
 	}
 	
 	@Test
@@ -61,7 +62,7 @@ public class AssetServiceImplTest {
 	public void Test_isAssetExisting_When_exceptionIsThrownDuringCheckingExistence_Then_rethrowException() {
 		context.checking(new Expectations() {{
             oneOf(assetDaoMock).isAssetExisting(with(any(Integer.class)));
-            will(throwException(new ServiceException("")));
+            will(throwException(new AssetDaoException("")));
 		}});
 		test.isAssetExisting(testAsset);
 	}
@@ -90,7 +91,7 @@ public class AssetServiceImplTest {
 	public void Test_isAssetOwnedByUser_When_exceptionIsThrownDuringCheckingOwnership_Then_rethrowException() {
 		context.checking(new Expectations() {{
             oneOf(assetDaoMock).isAssetOwnedByUser(with(any(Integer.class)), with(any(Integer.class)));
-            will(throwException(new ServiceException("")));
+            will(throwException(new AssetDaoException("")));
 		}});
 		test.isAssetOwnedByUser(testAsset);
 	}
@@ -98,6 +99,8 @@ public class AssetServiceImplTest {
 	@Test
 	public void Test_createAsset_When_assetOwnerExists_Then_createNewAsset() {
 		context.checking(new Expectations() {{
+			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)));
+			will(returnValue(false));
 			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
 			will(returnValue(true));
             oneOf(assetDaoMock).createNewAsset(with(any(AssetEntry.class)));
@@ -108,6 +111,8 @@ public class AssetServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_createAsset_When_assetOwnerDoesntExists_Then_throwException() {
 		context.checking(new Expectations() {{
+			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)));
+			will(returnValue(false));
 			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
 			will(returnValue(false));
 		}});
@@ -115,12 +120,23 @@ public class AssetServiceImplTest {
 	}
 	
 	@Test(expected=ServiceException.class)
+	public void Test_createAsset_When_assetAlreadyExists_Then_throwException() {
+		context.checking(new Expectations() {{
+			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)));
+			will(returnValue(true));
+		}});
+		test.createAsset(testAsset);
+	}
+	
+	@Test(expected=ServiceException.class)
 	public void Test_createAsset_When_assetOwnerExists_but_exceptionIsThrowDuringCreatingNewAsset_Then_throwException() {
 		context.checking(new Expectations() {{
+			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)));
+			will(returnValue(false));
 			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
 			will(returnValue(true));
 			oneOf(assetDaoMock).createNewAsset(with(any(AssetEntry.class)));
-			will(throwException(new ServiceException("")));
+			will(throwException(new AssetDaoException("")));
 		}});
 		test.createAsset(testAsset);
 	}
@@ -182,7 +198,7 @@ public class AssetServiceImplTest {
 			oneOf(assetDaoMock).isAssetOwnedByUser(with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(true));
 			oneOf(assetDaoMock).updateExistingAsset(with(any(AssetEntry.class)));
-			will(throwException(new ServiceException("")));
+			will(throwException(new AssetDaoException("")));
 		}});
 		test.updateAsset(testAsset);
 	}
@@ -248,7 +264,7 @@ public class AssetServiceImplTest {
 			oneOf(assetDaoMock).isAssetOwnedByUser(with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(true));
 			oneOf(assetDaoMock).findAssetByUserAndAssetId(with(any(Integer.class)), with(any(Integer.class)));
-			will(throwException(new ServiceException("")));
+			will(throwException(new AssetDaoException("")));
 		}});
 		test.findAsset(testAsset.getUserId(), testAsset.getAssetId());
 	}

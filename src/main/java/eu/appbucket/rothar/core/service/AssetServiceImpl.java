@@ -42,6 +42,17 @@ public class AssetServiceImpl implements AssetService {
 		return assetExists;
 	}
 
+	public boolean isAssetNotExisting(AssetEntry assetToCheckForExistence) throws ServiceException {
+		boolean assetDoesntExists = true;
+		String uuid = assetToCheckForExistence.getUuid();
+		try {
+			assetDoesntExists = !assetDao.isAssetExisting(uuid);
+		} catch (AssetDaoException assetDaoException) {
+			throw new ServiceException("Problem checking existence of the asset: " + uuid, assetDaoException);
+		}
+		return assetDoesntExists;
+	}
+	
 	public boolean isAssetOwnedByUser(AssetEntry assetToCheckForOwnership) throws ServiceException {
 		boolean assetOwnedByTheUser = false;
 		int assetId = assetToCheckForOwnership.getAssetId();
@@ -55,6 +66,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 	
 	public void createAsset(AssetEntry assetToBeCreated) throws ServiceException {
+		assertAssetDoesntExistByUuid(assetToBeCreated.getUuid());
 		assertUserExist(assetToBeCreated.getUserId());
 		createNewAsset(assetToBeCreated);
 	}
@@ -78,18 +90,27 @@ public class AssetServiceImpl implements AssetService {
 	}
 	
 	public void updateAsset(AssetEntry assetToBeUpdates) {
-		assertAssetExist(assetToBeUpdates.getAssetId());
+		assertAssetExistByAssetId(assetToBeUpdates.getAssetId());
 		assertUserExist(assetToBeUpdates.getUserId());
 		assertAssetIsOwnerByTheUser(assetToBeUpdates.getAssetId(), assetToBeUpdates.getUserId());
 		updateExistingAsset(assetToBeUpdates);
 	}
 	
-	private void assertAssetExist(Integer assetId) throws ServiceException {
+	private void assertAssetDoesntExistByUuid(String uuid) throws ServiceException {
+		AssetEntry assetToCheckForExistence = new AssetEntry();
+		assetToCheckForExistence.setUuid(uuid);
+		boolean assetExists = isAssetNotExisting(assetToCheckForExistence);
+		if(!assetExists) {
+			throw new ServiceException("Asset with uuid: " + uuid + " already exists.");
+		}
+	}
+	
+	private void assertAssetExistByAssetId(Integer assetId) throws ServiceException {
 		AssetEntry assetToCheckForExistence = new AssetEntry();
 		assetToCheckForExistence.setAssetId(assetId);
 		boolean assetExists = isAssetExisting(assetToCheckForExistence);
 		if(!assetExists) {
-			throw new ServiceException("Asset: " + assetId + " doesn't exists.");
+			throw new ServiceException("Asset with id: " + assetId + " doesn't exists.");
 		}
 	}
 	
@@ -112,7 +133,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 
 	public AssetEntry findAsset(Integer userId, Integer assetId) throws ServiceException {
-		assertAssetExist(assetId);
+		assertAssetExistByAssetId(assetId);
 		assertUserExist(userId);
 		assertAssetIsOwnerByTheUser(assetId, userId);
 		AssetEntry foundAsset = null;

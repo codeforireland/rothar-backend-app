@@ -107,12 +107,13 @@ public class AssetEntry {
 	public static AssetEntry fromAssetData(AssetData data) {
 		AssetEntry entry = new AssetEntry();
 		entry.setAssetId(entry.getAssetId());
-		entry.setStatusId(data.getStatus().getStatusId());
+		entry.setStatusId(data.getStatus() != null ? data.getStatus().getStatusId() : null);
 		entry.setCreated(data.getCreated());
 		entry.setUserId(data.getUserId());
 		entry.setMajor(data.getMajor());
 		entry.setMinor(data.getMinor());
 		entry.setUuid(data.getUuid());
+		entry.setDescription(data.getDescription());
 		return entry;
 	}	
 }

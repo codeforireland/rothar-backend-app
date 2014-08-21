@@ -62,7 +62,7 @@ public interface AssetService {
 	 * 
 	 * @param userId ID of the asset owner
 	 * @param assetId ID of the asset to be found
-	 * @return found assetS
+	 * @return found asset
 	 * 
 	 * @throws ServiceException if:
 	 * - asset to be found doesn't exist

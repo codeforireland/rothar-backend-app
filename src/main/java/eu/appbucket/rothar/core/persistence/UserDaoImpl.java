@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -12,11 +13,15 @@ import org.springframework.stereotype.Repository;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.persistence.exception.AssetDaoException;
 import eu.appbucket.rothar.core.persistence.exception.UserDaoException;
+import eu.appbucket.rothar.core.service.exception.ServiceException;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 	
 	private static final String FIND_USER_QUERY = "SELECT * FROM users where user_id = ?";
+	
+	public static final String IS_USER_EXISTING_QUERY = "SELECT count(*) from users "
+			+ " WHERE user_id = ?";
 	
 	private JdbcTemplate jdbcTempalte;
 	
@@ -29,12 +34,10 @@ public class UserDaoImpl implements UserDao {
 		UserEntry user = null;
 		try {
 			user = jdbcTempalte.queryForObject(FIND_USER_QUERY, new UserEntryMapper(), userId);	
+		} catch(EmptyResultDataAccessException emptyResultDataAccessException) {
+			user = new UserEntry();
 		} catch (DataAccessException e) {
 			throw new UserDaoException("Can't find user" + userId, e);
-		}
-		if(user == null) {
-			// throw new UserDaoException("User: " + userId + " doesn't exists.");
-			user = new UserEntry();
 		}
 		return user;
 	}
@@ -48,5 +51,19 @@ public class UserDaoImpl implements UserDao {
 			user.setCreated(rs.getTimestamp("created"));
 			return user;
 		}
+	}
+
+	public boolean isUserExisting(int userId) throws UserDaoException {
+		try {
+			int count = jdbcTempalte.queryForInt(IS_USER_EXISTING_QUERY, userId);
+			if(count > 0) {
+				return true;
+			}
+		} catch(EmptyResultDataAccessException emptyResultDataAccessException) {
+			return false;
+		} catch (DataAccessException dataAccessException) {
+			throw new AssetDaoException("Can't check if user: " + userId + " exists.", dataAccessException);
+		}
+		return false;
 	}
 }

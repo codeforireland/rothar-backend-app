@@ -16,32 +16,27 @@ import org.springframework.stereotype.Repository;
 import eu.appbucket.rothar.core.domain.asset.AssetEntry;
 import eu.appbucket.rothar.core.domain.asset.AssetFilter;
 import eu.appbucket.rothar.core.persistence.exception.AssetDaoException;
-/**
- * 
- * TODO: IMPLEMENT ACCRODING TO THE INTERFACE !!!!!
- * 
- * 
- * @author abednarski
- *
- */
 
 @Repository
 public class AssetDaoImpl implements AssetDao {
 
 	private JdbcTemplate jdbcTempalte;
 	
-	public static final String IS_ASSET_EXISTING_QUERY = "SELECT count(*) from assets "
+	public static final String IS_ASSET_EXISTING_BY_ASSET_ID_QUERY = "SELECT count(*) from assets "
 			+ " WHERE asset_id = ?";
+	
+	public static final String IS_ASSET_EXISTING_BY_ASSET_UUID_QUERY = "SELECT count(*) from assets "
+			+ " WHERE uuid = ?";
 	
 	public static final String IS_ASSET_OWNED_BY_USER_QUERY = "SELECT count(*) from assets "
 			+ " WHERE asset_id = ? AND user_id = ?";
 	
 	public static final String CREATE_ASSET_QUERY = "INSERT INTO assets "
-			+ "(asset_id, user_id, status_id, description, created)";
+			+ "(user_id, status_id, description, uuid, major, minor, created) "
+			+ "values (?, ?, ?, ?, ?, ?, ?)";
 	
 	public static final String UPDATE_ASSET_QUERY = "UPDATE assets "
-			+ " SET status_id = ?, description = ?)"
-			+ " WHERE asset_id = ?";
+			+ " SET status_id = ?, description = ?)";
 	
 	public static final String FIND_ASSET_BY_ASSET_ID_AND_USER_ID_QUERY = "SELECT * from assets "
 			+ " WHERE user_id = ?, asset_id = ?";
@@ -58,7 +53,7 @@ public class AssetDaoImpl implements AssetDao {
 	
 	public boolean isAssetExisting(int assetId) throws AssetDaoException {
 		try {
-			int count = jdbcTempalte.queryForInt(IS_ASSET_EXISTING_QUERY, assetId);
+			int count = jdbcTempalte.queryForInt(IS_ASSET_EXISTING_BY_ASSET_ID_QUERY, assetId);
 			if(count > 0) {
 				return true;
 			}
@@ -70,6 +65,20 @@ public class AssetDaoImpl implements AssetDao {
 		return false;
 	}
 
+	public boolean isAssetExisting(String uuid) throws AssetDaoException {
+		try {
+			int count = jdbcTempalte.queryForInt(IS_ASSET_EXISTING_BY_ASSET_UUID_QUERY, uuid);
+			if(count > 0) {
+				return true;
+			}
+		} catch(EmptyResultDataAccessException emptyResultDataAccessException) {
+			return false;
+		} catch (DataAccessException dataAccessException) {
+			throw new AssetDaoException("Can't check if asset: " + uuid + " exists.", dataAccessException);
+		}
+		return false;
+	}
+	
 	public boolean isAssetOwnedByUser(int assetId, int userId) throws AssetDaoException {
 		try {
 			int count = jdbcTempalte.queryForInt(IS_ASSET_OWNED_BY_USER_QUERY, assetId);
@@ -87,14 +96,17 @@ public class AssetDaoImpl implements AssetDao {
 	
 	public void createNewAsset(AssetEntry asset) throws AssetDaoException {
 		try {
-			jdbcTempalte.update(CREATE_ASSET_QUERY, 
-				asset.getAssetId(),
+			jdbcTempalte.update(CREATE_ASSET_QUERY,
 				asset.getUserId(),
 				asset.getStatusId(),
 				asset.getDescription(),
+				asset.getUuid(),
+				asset.getMajor(),
+				asset.getMinor(),
 				new Date());
 		} catch (DataAccessException dataAccessException) {
-			throw new AssetDaoException("Can't create asset : " + asset.getUuid() + " for user: " + asset.getUserId(), 
+			throw new AssetDaoException(
+					"Can't create asset : " + asset.getUuid() + " for user: " + asset.getUserId(), 
 					dataAccessException);
 		}
 	}
@@ -116,6 +128,8 @@ public class AssetDaoImpl implements AssetDao {
 		try {
 			asset = jdbcTempalte.queryForObject(FIND_ASSET_BY_ASSET_ID_AND_USER_ID_QUERY, 
 					new AssetEntryMapper(), userId, assetId);	
+		} catch(EmptyResultDataAccessException emptyResultDataAccessException) {
+			asset = new AssetEntry();
 		} catch (DataAccessException dataAccessException) {
 			throw new AssetDaoException("Can't find asset " + assetId + " for user: " + userId, dataAccessException);
 		}

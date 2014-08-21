@@ -17,7 +17,7 @@ public class RestExceptionProcessor {
 	@ExceptionHandler(ServiceException.class)
     @ResponseStatus(value=HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ErrorInfo smartphoneNotFound(HttpServletRequest req, ServiceException ex) {
+    public ErrorInfo serviceException(HttpServletRequest req, ServiceException ex) {
         String errorURL = req.getRequestURL().toString();
         return new ErrorInfo(errorURL, ex.getMessage());
     }

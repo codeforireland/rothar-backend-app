@@ -1,8 +1,10 @@
 package eu.appbucket.rothar.web.controller.asset;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +22,7 @@ import eu.appbucket.rothar.core.domain.asset.AssetEntry;
 import eu.appbucket.rothar.core.domain.asset.AssetFilter;
 import eu.appbucket.rothar.core.service.AssetService;
 import eu.appbucket.rothar.web.domain.asset.AssetData;
+import eu.appbucket.rothar.web.domain.report.ReportData;
 
 @Controller
 public class AssetController {
@@ -32,14 +35,14 @@ public class AssetController {
 		this.assetService = assetService;
 	}
 	
-	@RequestMapping(value = "v1/users/{ownerId}/assets", 
-			method = RequestMethod.POST)
+	@RequestMapping(value = "v1/users/{ownerId}/assets", method = RequestMethod.POST)
 	@ResponseBody
 	public void createOwnerAsset(
-			@PathVariable String ownerId, 
+			@PathVariable Integer ownerId, 
 			@RequestBody AssetData assetData) {
   		LOGGER.info("createAsset");
 		AssetEntry assetEntry = AssetEntry.fromAssetData(assetData);
+		assetEntry.setUserId(ownerId);
 		assetService.createAsset(assetEntry);
 	}
 	
@@ -57,7 +60,7 @@ public class AssetController {
 		assetService.updateAsset(assetEntry);
 	}
 	
-	@RequestMapping(value = "v1/user/{ownerId}/asset", method = RequestMethod.GET)
+	@RequestMapping(value = "v1/users/{ownerId}/assets", method = RequestMethod.GET)
 	@ResponseBody
 	public List<AssetData> getOwnerAssets(
 			@PathVariable Integer ownerId,
@@ -88,25 +91,26 @@ public class AssetController {
 	}
 	
 	private static final class InputSanitizer {	
-		private static final Set<String> VALID_SORT = new HashSet<String>();
+		private static final Map<String, String> VALID_SORT = new HashMap<String, String>();
 		private static final Set<String> VALID_ORDER = new HashSet<String>();
 		
 		static {
-			VALID_SORT.add("created");
-			VALID_SORT.add("description");
-			VALID_SORT.add("status");
+			VALID_SORT.put("created", "created");
+			VALID_SORT.put("description", "description");
+			VALID_SORT.put("status", "status_id");
 			VALID_ORDER.add("asc");
 			VALID_ORDER.add("desc");
 		}
 	
 		public static String resoleveSort(String inputSort) {
-			String defaultSort = "status";
+			String defaultSort = VALID_SORT.get("status");
 			if(StringUtils.isEmpty(inputSort)) {
 				return defaultSort;
 			}
-			if(!VALID_SORT.contains(inputSort)) {
+			if(!VALID_SORT.keySet().contains(inputSort)) {
 				return defaultSort;
 			}
+			inputSort = VALID_SORT.get(inputSort);
 			return inputSort;
 		}
 		
