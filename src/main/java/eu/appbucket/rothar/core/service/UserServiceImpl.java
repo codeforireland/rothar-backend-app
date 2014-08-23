@@ -41,20 +41,17 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public UserEntry findUser(int userId) throws ServiceException {
-		assertUserExistById(userId);
+		assertUserExistsById(userId);
 		UserEntry foundUser = null;
 		try {
 			foundUser = userDao.findUserById(userId);
 		} catch (UserDaoException userDaoException) {
 			throw new ServiceException("Can't find user: " + userId, userDaoException);
 		}
-		if(foundUser.getUserId() == null) {
-			throw new ServiceException("User: " + userId + " doesn't exists.");
-		}
 		return foundUser;
 	}
 
-	private void assertUserExistById(Integer userId) throws ServiceException {
+	private void assertUserExistsById(Integer userId) throws ServiceException {
 		UserEntry userToCheckForExistence = new UserEntry();
 		userToCheckForExistence.setUserId(userId);
 		boolean userExists = isUserExisting(userToCheckForExistence);
@@ -92,7 +89,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public UserEntry activateUser(UserEntry userToBeActivated) throws ServiceException {
-		assertUserExistById(userToBeActivated.getUserId());
+		assertUserExistsById(userToBeActivated.getUserId());
 		assertActivationCodeMatch(userToBeActivated);
 		activatExistingUser(userToBeActivated);
 		String password = generatePasswordForUser(userToBeActivated);
@@ -104,7 +101,7 @@ public class UserServiceImpl implements UserService {
 	private void assertActivationCodeMatch(UserEntry userToCheckActivationCode) {
 		UserEntry userWithActicationCode = userDao.findUserById(userToCheckActivationCode.getUserId());
 		if(!userWithActicationCode.getActivationCode().equals(userToCheckActivationCode.getActivationCode())) {
-			throw new ServiceException("Activation code doesn't match for user: " + userToCheckActivationCode.getUserId());
+			throw new ServiceException("Activation code doesn't match for user with id: " + userToCheckActivationCode.getUserId());
 		}
 	}
 	
@@ -125,8 +122,15 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public void updateUser(UserEntry userToBeUpdated) throws ServiceException {
-		assertUserExistById(userToBeUpdated.getUserId());
+		assertUserIsActivated(userToBeUpdated.getUserId());
 		updateExistingUser(userToBeUpdated);
+	}
+	
+	private void assertUserIsActivated(Integer userIdToBeChecked) throws ServiceException {
+		UserEntry user = findUser(userIdToBeChecked);
+		if(!user.isActivated()) {
+			throw new ServiceException("User with id: " + userIdToBeChecked + " is not activated.");
+		}
 	}
 	
 	private void updateExistingUser(UserEntry userToBeUpdated) {

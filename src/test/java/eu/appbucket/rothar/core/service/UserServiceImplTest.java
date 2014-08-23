@@ -18,6 +18,8 @@ public class UserServiceImplTest {
 	private Mockery context = new JUnit4Mockery();
 	private UserEntry testUser;
 	private UserEntry testUserWithInvalidActivationCode;
+	private UserEntry testUserWhichIsActivated;
+	private UserEntry testUserWhichIsNotActivated;
 	private UserDao userDaoMock;
 	
 	@Before
@@ -30,6 +32,12 @@ public class UserServiceImplTest {
 		testUser.setActivationCode("generated-activation-code");
 		testUserWithInvalidActivationCode = new UserEntry();
 		testUserWithInvalidActivationCode.setActivationCode("invalid-activation-code");
+		testUserWhichIsActivated = new UserEntry();
+		testUserWhichIsActivated.setActivated(true);
+		testUserWhichIsActivated.setUserId(2);
+		testUserWhichIsNotActivated = new UserEntry();
+		testUserWhichIsNotActivated.setActivated(false);
+		testUserWhichIsNotActivated.setUserId(3);
 		userDaoMock = context.mock(UserDao.class);
 		test.setUserDao(userDaoMock);
 	}
@@ -164,10 +172,12 @@ public class UserServiceImplTest {
 	}
 	
 	@Test
-	public void Test_updateUser_When_userExists_Then_updateUser() {
+	public void Test_updateUser_When_userExists_and_userIsActivate_Then_updateUser() {
 		context.checking(new Expectations() {{
             oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
             will(returnValue(true));
+            oneOf(userDaoMock).findUserById(with(any(Integer.class)));
+            will(returnValue(testUserWhichIsActivated));
             oneOf(userDaoMock).updateExistingUser(testUser);            
 		}});
 		test.updateUser(testUser);
@@ -183,10 +193,23 @@ public class UserServiceImplTest {
 	}
 	
 	@Test(expected=ServiceException.class)
-	public void Test_updateUser_When_userExists_but_exceptionWasThrowDuringUpdatingUser_Then_throwException() {
+	public void Test_updateUser_When_userExists_but_userIsNotYetActivated_Then_throwException() {
 		context.checking(new Expectations() {{
             oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
             will(returnValue(true));
+            oneOf(userDaoMock).findUserById(with(any(Integer.class)));
+            will(returnValue(testUserWhichIsNotActivated));
+		}});
+		test.updateUser(testUser);
+	}
+	
+	@Test(expected=ServiceException.class)
+	public void Test_updateUser_When_userExists_and_userIsActivated_but_exceptionWasThrowDuringUpdatingUser_Then_throwException() {
+		context.checking(new Expectations() {{
+            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            will(returnValue(true));
+            oneOf(userDaoMock).findUserById(with(any(Integer.class)));
+            will(returnValue(testUserWhichIsActivated));
             oneOf(userDaoMock).updateExistingUser(testUser);
             will(throwException(new UserDaoException("")));
 		}});

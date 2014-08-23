@@ -66,4 +66,36 @@ public class UserDaoImpl implements UserDao {
 		}
 		return false;
 	}
+
+	public boolean isUserExisting(String email) throws UserDaoException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public UserEntry createNewUser(UserEntry userToBeCreated)
+			throws UserDaoException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String generateUserActicationCode(int userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void activateExistingUser(int userId) throws UserDaoException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String generateUserPassword(int userId) throws UserDaoException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void updateExistingUser(UserEntry userToBeUpdate)
+			throws UserDaoException {
+		// TODO Auto-generated method stub
+		
+	}
 }
