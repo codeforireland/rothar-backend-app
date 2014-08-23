@@ -17,6 +17,7 @@ public class UserServiceImplTest {
 	private UserServiceImpl test;
 	private Mockery context = new JUnit4Mockery();
 	private UserEntry testUser;
+	private UserEntry testUserWithInvalidActivationCode;
 	private UserDao userDaoMock;
 	
 	@Before
@@ -24,6 +25,11 @@ public class UserServiceImplTest {
 		test = new UserServiceImpl();
 		testUser = new UserEntry();
 		testUser.setUserId(1);
+		testUser.setEmail("email-address");
+		testUser.setPassword("generated-password");
+		testUser.setActivationCode("generated-activation-code");
+		testUserWithInvalidActivationCode = new UserEntry();
+		testUserWithInvalidActivationCode.setActivationCode("invalid-activation-code");
 		userDaoMock = context.mock(UserDao.class);
 		test.setUserDao(userDaoMock);
 	}
@@ -91,17 +97,99 @@ public class UserServiceImplTest {
 	}
 	
 	@Test
-	public void Test_createUser() {
-		throw new RuntimeException("Implement test according to the interface.");
+	public void Test_createUser_When_userHasUniqueEmail_Then_createUser() {
+		context.checking(new Expectations() {{
+            oneOf(userDaoMock).isUserExisting(with(any(String.class)));
+            will(returnValue(false));
+            oneOf(userDaoMock).createNewUser(testUser);
+            will(returnValue(testUser));
+            oneOf(userDaoMock).generateUserActicationCode(with(any(Integer.class)));
+            will(returnValue(""));
+		}});
+		test.createUser(testUser);
+	}
+	
+	@Test(expected=ServiceException.class)
+	public void Test_createUser_When_userWithGivenEmailAlreadyExists_Then_throwException() {
+		context.checking(new Expectations() {{
+            oneOf(userDaoMock).isUserExisting(with(any(String.class)));
+            will(returnValue(true));
+		}});
+		test.createUser(testUser);
+	}
+	
+	@Test(expected=ServiceException.class)
+	public void Test_createUser_When_userHasUniqueEmail_but_exceptionWasThrowDuringCreatingNewUser_Then_throwException() {
+		context.checking(new Expectations() {{
+            oneOf(userDaoMock).isUserExisting(with(any(String.class)));
+            will(returnValue(false));
+            oneOf(userDaoMock).createNewUser(testUser);
+            will(throwException(new UserDaoException("")));
+		}});
+		test.createUser(testUser);
 	}
 	
 	@Test
-	public void Test_activateUser() {
-		throw new RuntimeException("Implement test according to the interface.");
+	public void Test_activateUser_When_userExists_and_activationCodeMatch_Then_activateUser() {
+		context.checking(new Expectations() {{
+            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            will(returnValue(true));
+            oneOf(userDaoMock).findUserById(with(any(Integer.class)));
+            will(returnValue(testUser));
+            oneOf(userDaoMock).activateExistingUser(with(any(Integer.class)));
+            oneOf(userDaoMock).generateUserPassword(with(any(Integer.class)));
+            will(returnValue(testUser.getPassword()));
+		}});
+		test.activateUser(testUser);
+	}
+	
+	@Test(expected=ServiceException.class)
+	public void Test_activateUser_When_userUserDoesntExists_Then_throwException() {
+		context.checking(new Expectations() {{
+            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            will(returnValue(false));
+		}});
+		test.activateUser(testUser);
+	}
+	
+	@Test(expected=ServiceException.class)
+	public void Test_activateUser_When_userExists_but_activationCodeDoesntMatch_Then_throwException() {
+		context.checking(new Expectations() {{
+            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            will(returnValue(true));
+            oneOf(userDaoMock).findUserById(with(any(Integer.class)));
+            will(returnValue(testUserWithInvalidActivationCode));
+		}});
+		test.activateUser(testUser);
 	}
 	
 	@Test
-	public void Test_updateUser() {
-		throw new RuntimeException("Implement test according to the interface.");
+	public void Test_updateUser_When_userExists_Then_updateUser() {
+		context.checking(new Expectations() {{
+            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            will(returnValue(true));
+            oneOf(userDaoMock).updateExistingUser(testUser);            
+		}});
+		test.updateUser(testUser);
+	}
+	
+	@Test(expected=ServiceException.class)
+	public void Test_updateUser_But_userDoesntExists_Then_throwException() {
+		context.checking(new Expectations() {{
+            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            will(returnValue(false));            
+		}});
+		test.updateUser(testUser);
+	}
+	
+	@Test(expected=ServiceException.class)
+	public void Test_updateUser_When_userExists_but_exceptionWasThrowDuringUpdatingUser_Then_throwException() {
+		context.checking(new Expectations() {{
+            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            will(returnValue(true));
+            oneOf(userDaoMock).updateExistingUser(testUser);
+            will(throwException(new UserDaoException("")));
+		}});
+		test.updateUser(testUser);
 	}
 }

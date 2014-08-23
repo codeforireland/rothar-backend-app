@@ -85,7 +85,7 @@ public class AssetServiceImpl implements AssetService {
 		try {
 			assetDao.createNewAsset(asset);
 		} catch (AssetDaoException assetDaoException) {
-			throw new ServiceException("Can't create asset " + asset.getUuid() + " for the user: " + asset.getUserId(), assetDaoException);
+			throw new ServiceException("Can't create asset with uuid: " + asset.getUuid() + " for the user with id: " + asset.getUserId(), assetDaoException);
 		}
 	}
 	
