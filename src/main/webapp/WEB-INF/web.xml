@@ -43,21 +43,9 @@
 		</init-param>
 	</servlet>
 
-	<servlet>
-		<servlet-name>rothar-testlet</servlet-name>
-		<display-name>Testlet</display-name>
-		<servlet-class>eu.appbucket.rothar.web.servlet.Testlet</servlet-class>
-	</servlet>
-	
 	<servlet-mapping>
 		<servlet-name>rothar-dispatcher</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
-
-	
-	<servlet-mapping>
-		<servlet-name>rothar-testlet</servlet-name>
-		<url-pattern>/testlet</url-pattern>
-	</servlet-mapping>
 </web-app>
