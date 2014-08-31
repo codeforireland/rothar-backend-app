@@ -6,7 +6,14 @@ public class UserData {
 	
 	private String name;
 	private String email;
+	private String passwrod;
 	
+	public String getPasswrod() {
+		return passwrod;
+	}
+	public void setPasswrod(String passwrod) {
+		this.passwrod = passwrod;
+	}
 	public String getName() {
 		return name;
 	}

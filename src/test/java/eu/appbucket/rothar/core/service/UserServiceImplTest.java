@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import eu.appbucket.rothar.core.domain.email.EmailService;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.persistence.UserDao;
 import eu.appbucket.rothar.core.persistence.exception.UserDaoException;
@@ -21,6 +22,7 @@ public class UserServiceImplTest {
 	private UserEntry testUserWhichIsActivated;
 	private UserEntry testUserWhichIsNotActivated;
 	private UserDao userDaoMock;
+	private EmailService emailServiceMock;
 	
 	@Before
 	public void setup() {
@@ -40,12 +42,14 @@ public class UserServiceImplTest {
 		testUserWhichIsNotActivated.setUserId(3);
 		userDaoMock = context.mock(UserDao.class);
 		test.setUserDao(userDaoMock);
+		emailServiceMock = context.mock(EmailService.class);
+		test.setEmailService(emailServiceMock);
 	}
 	
 	@Test
 	public void Test_isUserExisting_When_userExists_Then_returnTrue() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(true));
 		}});
 		boolean userExists = test.isUserExisting(testUser);
@@ -55,7 +59,7 @@ public class UserServiceImplTest {
 	@Test
 	public void Test_isUserExisting_When_userDoesntExists_Then_returnFalse() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(false));
 		}});
 		boolean userExists = test.isUserExisting(testUser);
@@ -65,7 +69,7 @@ public class UserServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_isUserExisting_When_exceptionIsThrowDuringCheckingExistence_Then_throwException() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(throwException(new UserDaoException("")));
 		}});
 		test.isUserExisting(testUser);
@@ -74,7 +78,7 @@ public class UserServiceImplTest {
 	@Test
 	public void Test_findUser_When_userExists_Then_returnUser() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(true));
             oneOf(userDaoMock).findUserById(with(any(Integer.class)));
             will(returnValue(testUser));
@@ -87,7 +91,7 @@ public class UserServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_findUser_When_userDoesntExists_Then_throwException() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(false));
 		}});
 		test.findUser(testUser.getUserId());
@@ -96,7 +100,7 @@ public class UserServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_findUser_When_userExists_but_exceptionIsThrowDuringFindingUser_Then_throwException() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(true));
             oneOf(userDaoMock).findUserById(with(any(Integer.class)));
             will(throwException(new UserDaoException("")));
@@ -107,12 +111,13 @@ public class UserServiceImplTest {
 	@Test
 	public void Test_createUser_When_userHasUniqueEmail_Then_createUser() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(String.class)));
+            oneOf(userDaoMock).isUserExistingByEmail(with(any(String.class)));
             will(returnValue(false));
             oneOf(userDaoMock).createNewUser(testUser);
             will(returnValue(testUser));
-            oneOf(userDaoMock).generateUserActicationCode(with(any(Integer.class)));
+            oneOf(userDaoMock).setupUserActivationCode(with(any(Integer.class)));
             will(returnValue(""));
+            oneOf(emailServiceMock).sendUserActivationEmail(testUser);
 		}});
 		test.createUser(testUser);
 	}
@@ -120,7 +125,7 @@ public class UserServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_createUser_When_userWithGivenEmailAlreadyExists_Then_throwException() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(String.class)));
+            oneOf(userDaoMock).isUserExistingByEmail(with(any(String.class)));
             will(returnValue(true));
 		}});
 		test.createUser(testUser);
@@ -129,7 +134,7 @@ public class UserServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_createUser_When_userHasUniqueEmail_but_exceptionWasThrowDuringCreatingNewUser_Then_throwException() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(String.class)));
+            oneOf(userDaoMock).isUserExistingByEmail(with(any(String.class)));
             will(returnValue(false));
             oneOf(userDaoMock).createNewUser(testUser);
             will(throwException(new UserDaoException("")));
@@ -140,13 +145,11 @@ public class UserServiceImplTest {
 	@Test
 	public void Test_activateUser_When_userExists_and_activationCodeMatch_Then_activateUser() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(true));
             oneOf(userDaoMock).findUserById(with(any(Integer.class)));
             will(returnValue(testUser));
-            oneOf(userDaoMock).activateExistingUser(with(any(Integer.class)));
-            oneOf(userDaoMock).generateUserPassword(with(any(Integer.class)));
-            will(returnValue(testUser.getPassword()));
+            oneOf(userDaoMock).activateExistingUser(with(any(Integer.class)));            
 		}});
 		test.activateUser(testUser);
 	}
@@ -154,7 +157,7 @@ public class UserServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_activateUser_When_userUserDoesntExists_Then_throwException() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(false));
 		}});
 		test.activateUser(testUser);
@@ -163,7 +166,7 @@ public class UserServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_activateUser_When_userExists_but_activationCodeDoesntMatch_Then_throwException() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(true));
             oneOf(userDaoMock).findUserById(with(any(Integer.class)));
             will(returnValue(testUserWithInvalidActivationCode));
@@ -174,7 +177,7 @@ public class UserServiceImplTest {
 	@Test
 	public void Test_updateUser_When_userExists_and_userIsActivate_Then_updateUser() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(true));
             oneOf(userDaoMock).findUserById(with(any(Integer.class)));
             will(returnValue(testUserWhichIsActivated));
@@ -186,7 +189,7 @@ public class UserServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_updateUser_But_userDoesntExists_Then_throwException() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(false));            
 		}});
 		test.updateUser(testUser);
@@ -195,7 +198,7 @@ public class UserServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_updateUser_When_userExists_but_userIsNotYetActivated_Then_throwException() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(true));
             oneOf(userDaoMock).findUserById(with(any(Integer.class)));
             will(returnValue(testUserWhichIsNotActivated));
@@ -206,7 +209,7 @@ public class UserServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_updateUser_When_userExists_and_userIsActivated_but_exceptionWasThrowDuringUpdatingUser_Then_throwException() {
 		context.checking(new Expectations() {{
-            oneOf(userDaoMock).isUserExisting(with(any(Integer.class)));
+            oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(true));
             oneOf(userDaoMock).findUserById(with(any(Integer.class)));
             will(returnValue(testUserWhichIsActivated));

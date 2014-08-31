@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import eu.appbucket.rothar.core.domain.asset.AssetEntry;
@@ -65,6 +66,7 @@ public class AssetServiceImpl implements AssetService {
 		return assetOwnedByTheUser;
 	}
 	
+	@Transactional
 	public void createAsset(AssetEntry assetToBeCreated) throws ServiceException {
 		assertAssetDoesntExistByUuid(assetToBeCreated.getUuid());
 		assertUserExist(assetToBeCreated.getUserId());
@@ -89,6 +91,7 @@ public class AssetServiceImpl implements AssetService {
 		}
 	}
 	
+	@Transactional
 	public void updateAsset(AssetEntry assetToBeUpdates) {
 		assertAssetExistByAssetId(assetToBeUpdates.getAssetId());
 		assertUserExist(assetToBeUpdates.getUserId());

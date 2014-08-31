@@ -4,17 +4,20 @@ CREATE TABLE `users` (
   `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `activated` TINYINT(1) NOT NULL,
+  `activation_code` varchar(37),
+  `password` varchar(10),
   `created` datetime NOT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-insert into `users` (`user_id`, `email`, `name`, `created`) 
-values (1, 'adam@bednarski.pl', 'Adam Bednarski', now()); 
+insert into `users` (`user_id`, `email`, `name`, `activated`, `activation_code`, `password`, `created`)
+values (1, 'adam@bednarski.pl', 'Adam Bednarski', 1, '4bc4fd71-0bb3-4b42-a509-c2ba16ade405', 'adam', now()); 
 
-insert into users (user_id, email, name, created) 
-values (2, 'philip@murphy.ie', 'Philip Murphy', now()); 
+insert into `users` (`user_id`, `email`, `name`, `activated`, `activation_code`, `password`, `created`)
+values (2, 'philip@murphy.ie', 'Philip Murphy', 1, '9df78d5a-cfe5-42f0-a5f4-98fca7031cff', 'philip', now()); 
 
-insert into users (user_id, email, name, created) 
-values (3, 'mark@montgomerie.nz', 'Mark Montgomerie', now());
+insert into `users` (`user_id`, `email`, `name`, `activated`, `activation_code`, `password`, `created`)
+values (3, 'mark@montgomerie.nz', 'Mark Montgomerie', 1, '995326c1-35cc-48a7-9398-15f1d4e0eca1', 'mark', now());
 

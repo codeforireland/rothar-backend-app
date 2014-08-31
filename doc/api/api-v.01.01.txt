@@ -1,28 +1,51 @@
 
+## REPORTS ##
+
+# create the report for asset
+
+curl -H \
+	"Content-Type: application/json" \
+	-X POST -d '{"latitude":"53.271534", "longitude":"-6.315946"}' \
+	http://localhost:8080/Rothar/v1/users/2/assets/20/reports 
+
+
 ## ASSETS ##
 
-# get list of the user asset
+# get assets list for the user
 
-curl -i -H \
+curl -H \
 	"Content-Type: application/json" \
 	-X GET \
 	http://localhost:8080/Rothar/v1/users/2/assets
 
 # create the asset for user
 
-curl -i -H \
+curl -H \
 	"Content-Type: application/json" \
 	-X POST -d '{"uuid":"39efdca2-918a-428d-8ad2-daff67ee1c9e", "minor":"1", "major":"1", "description":"red bike"}' \
 	http://localhost:8080/Rothar/v1/users/1/assets
 
- 
+	 
 ## USERS ##
 
-## REPORTS ##
+# find user by id
 
-# create the report for asset
-
-curl -i -H \
+curl -H \
 	"Content-Type: application/json" \
-	-X POST -d '{"latitude":"53.271534", "longitude":"-6.315946"}' \
-	http://localhost:8080/Rothar/v1/users/2/assets/20/reports 
+	-X GET \
+	http://localhost:8080/Rothar/v1/users/1
+
+# register new user
+
+curl -H \
+	"Content-Type: application/json" \
+	-X POST -d '{"email":"abednarski79@gmail.com", "name":"Adam", "password":"xyz"}' \
+	http://localhost:8080/Rothar/v1/users
+
+# activate registered user
+
+curl -H \
+	"Content-Type: application/json" \
+	-X GET \
+	http://localhost:8080/Rothar/v1/users/1/code/4bc4fd71-0bb3-4b42-a509-c2ba16ade405
+	

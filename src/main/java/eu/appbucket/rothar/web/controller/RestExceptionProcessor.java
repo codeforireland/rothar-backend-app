@@ -15,10 +15,13 @@ import eu.appbucket.rothar.web.domain.exception.ErrorInfo;
 public class RestExceptionProcessor {
 	
 	@ExceptionHandler(ServiceException.class)
-    @ResponseStatus(value=HttpStatus.NOT_FOUND)
+    @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ErrorInfo serviceException(HttpServletRequest req, ServiceException ex) {
-        String errorURL = req.getRequestURL().toString();
-        return new ErrorInfo(errorURL, ex.getMessage());
+		ErrorInfo error = new ErrorInfo();
+		error.setUrl(req.getRequestURL().toString());
+        error.setClientMessage(ex.getMessage());
+        error.setDeveloperMessage(ex.getCause() != null ? ex.getCause().getMessage() : "");
+        return error;
     }
 }

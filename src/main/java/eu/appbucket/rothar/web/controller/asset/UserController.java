@@ -1,6 +1,8 @@
 package eu.appbucket.rothar.web.controller.asset;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,23 +29,28 @@ import eu.appbucket.rothar.web.domain.user.UserData;
  * 1. User provide email address and password.
  * 2. If user is active and his email address is matching with the stored password user is 
  * allowed to login into the system.
-*/	
+*/
+@Controller
 public class UserController {
 	
 	private static final Logger LOGGER = Logger.getLogger(UserController.class);	
 	private UserService userService;
-	private EmailService emailService;
+	
+	
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
 	
 	@RequestMapping(value = "v1/users", method = RequestMethod.POST)
 	@ResponseBody
 	public void registerUser(@RequestBody UserData userToBeCreated) {
 		LOGGER.info("registerUser");
-		UserEntry newUser = UserEntry.fromUserData(userToBeCreated);
-		UserEntry createdUser = userService.createUser(newUser);
-		emailService.sendUserActivationEmail(createdUser);
+		UserEntry userToBeRegistered = UserEntry.fromUserData(userToBeCreated);
+		userService.createUser(userToBeRegistered);
 	}
 	
-	@RequestMapping(value = "v1/users/{userIdToActivate}/code/{activationCode}", method = RequestMethod.PUT)
+	@RequestMapping(value = "v1/users/{userIdToActivate}/code/{activationCode}", method = RequestMethod.GET)
 	@ResponseBody
 	public void activateUser(
 			@PathVariable Integer userIdToActivate,
@@ -52,8 +59,7 @@ public class UserController {
 		UserEntry userToActivate = new UserEntry();
 		userToActivate.setActivationCode(activationCode);
 		userToActivate.setUserId(userIdToActivate);
-		UserEntry activatedUser = userService.activateUser(userToActivate);
-		emailService.sendUserPasswordEmail(activatedUser);
+		userService.activateUser(userToActivate);
 	}
 	
 	@RequestMapping(value = "v1/users/{userIdToFind}", method = RequestMethod.GET)

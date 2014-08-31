@@ -2,7 +2,9 @@ package eu.appbucket.rothar.core.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import eu.appbucket.rothar.core.domain.email.EmailService;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.persistence.UserDao;
 import eu.appbucket.rothar.core.persistence.exception.UserDaoException;
@@ -12,17 +14,23 @@ import eu.appbucket.rothar.core.service.exception.ServiceException;
 public class UserServiceImpl implements UserService {
 	
 	private UserDao userDao;
+	private EmailService emailService;
 	
 	@Autowired
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
 	
+	@Autowired
+	public void setEmailService(EmailService emailService) {
+		this.emailService = emailService;
+	}
+	
 	public boolean isUserExisting(UserEntry userToCheckForExistence) throws ServiceException {
 		boolean userExists = false;
 		int userId = userToCheckForExistence.getUserId();
 		try {
-			userExists = userDao.isUserExisting(userId);
+			userExists = userDao.isUserExistingById(userId);
 		} catch (UserDaoException userDaoException) {
 			throw new ServiceException("Problem checking existence of the user with id: " + userId, userDaoException);
 		}	
@@ -33,7 +41,7 @@ public class UserServiceImpl implements UserService {
 		boolean userDoesntExists = false;
 		String email = userToCheckForNotExistence.getEmail();
 		try {
-			userDoesntExists = !userDao.isUserExisting(email);
+			userDoesntExists = !userDao.isUserExistingByEmail(email);
 		} catch (UserDaoException userDaoException) {
 			throw new ServiceException("Problem checking existence of the user with eamil: " + email, userDaoException);
 		}
@@ -60,10 +68,13 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Transactional
 	public UserEntry createUser(UserEntry userToBeCreated)
 			throws ServiceException {
 		assertUserDoesntExistsByEmail(userToBeCreated.getEmail());
-		return createNewUser(userToBeCreated);
+		UserEntry createdUser = createNewUser(userToBeCreated);
+		emailService.sendUserActivationEmail(createdUser);
+		return createdUser;
 	}
 
 	private void assertUserDoesntExistsByEmail(String email) {
@@ -80,7 +91,7 @@ public class UserServiceImpl implements UserService {
 		String activationCode = new String();
 		try {
 			newUser = userDao.createNewUser(userToBeCreated);
-			activationCode = userDao.generateUserActicationCode(newUser.getUserId());
+			activationCode = userDao.setupUserActivationCode(newUser.getUserId());
 			newUser.setActivationCode(activationCode);
 		} catch (UserDaoException userDaoException) {
 			throw new ServiceException("Can't create user with email: " + userToBeCreated.getEmail(), userDaoException);
@@ -88,13 +99,12 @@ public class UserServiceImpl implements UserService {
 		return newUser;
 	}
 	
+	@Transactional
 	public UserEntry activateUser(UserEntry userToBeActivated) throws ServiceException {
 		assertUserExistsById(userToBeActivated.getUserId());
 		assertActivationCodeMatch(userToBeActivated);
 		activatExistingUser(userToBeActivated);
-		String password = generatePasswordForUser(userToBeActivated);
 		UserEntry activatedUser = userToBeActivated;
-		activatedUser.setPassword(password);
 		return activatedUser;
 	}
 
@@ -113,14 +123,7 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
-	private String generatePasswordForUser(UserEntry userToGeneratePassword) {
-		try {
-			return userDao.generateUserPassword(userToGeneratePassword.getUserId());
-		} catch (UserDaoException userDaoException) {
-			throw new ServiceException("Can't generate password for user with id: " + userToGeneratePassword.getUserId(), userDaoException);
-		}
-	}
-	
+	@Transactional
 	public void updateUser(UserEntry userToBeUpdated) throws ServiceException {
 		assertUserIsActivated(userToBeUpdated.getUserId());
 		updateExistingUser(userToBeUpdated);

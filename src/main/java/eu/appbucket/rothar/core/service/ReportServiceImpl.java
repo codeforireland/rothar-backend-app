@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import eu.appbucket.rothar.core.domain.report.ReportEntry;
 import eu.appbucket.rothar.core.domain.report.ReportEntryFilter;
@@ -27,6 +28,7 @@ public class ReportServiceImpl implements ReportService {
 		this.userService = userService;
 	}
 	
+	@Transactional
 	public void saveReportEntry(ReportEntry reportData) {
 		assertUserExists(reportData.getReporterId());
 		reportDao.createNewEntry(reportData);

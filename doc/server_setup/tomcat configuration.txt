@@ -29,3 +29,16 @@ to
 exec "$PRGDIR"/"$EXECUTABLE" jpda start "$@"
  
  b) in windows: TODO
+ 
+4) Set email credentials
+
+a) in linux (or windows cygwin) for tomcat 7 - go to conf folder and add at the end of catalina.properties content:
+GMAIL_ADDRESS=USERNAME@gmail.com
+GMAIL_PASSWORD=PASSWORD
+
+b) in windows: TODO
+
+5) Application URL
+Main application URL
+a) in linux (or windows cygwin) for tomcat 7 - go to conf folder and add at the end of catalina.properties content:
+APP_URL=http://localhost:8080/Rothar

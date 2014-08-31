@@ -3,26 +3,30 @@ package eu.appbucket.rothar.web.domain.exception;
 public class ErrorInfo {
 	
 	private String url;
-	private String message;
+	private String clientMessage;
+	private String developerMessage;
 	
-	public ErrorInfo(String url, String message) {
-		this.url = url;
-		this.message = message;
+	public void setDeveloperMessage(String developerMessage) {
+		this.developerMessage = developerMessage;
+	}
+	
+	public String getDeveloperMessage() {
+		return developerMessage;
 	}
 
+	public void setClientMessage(String clientMessage) {
+		this.clientMessage = clientMessage;
+	}
+	
+	public String getClientMessage() {
+		return clientMessage;
+	}
+	
 	public String getUrl() {
 		return url;
 	}
 
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 }

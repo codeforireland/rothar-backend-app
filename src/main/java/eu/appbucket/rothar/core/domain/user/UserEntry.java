@@ -9,7 +9,6 @@ public class UserEntry {
 	
 	private Integer userId;
 	private String email;
-	private String login;
 	private String password;
 	private String name;
 	private Date created;
@@ -30,14 +29,6 @@ public class UserEntry {
 
 	public void setActivated(boolean activated) {
 		this.activated = activated;
-	}
-
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
 	}
 
 	public String getPassword() {

@@ -1,6 +1,7 @@
 package eu.appbucket.rothar.core.domain.email;
 
 import eu.appbucket.rothar.core.domain.user.UserEntry;
+import eu.appbucket.rothar.core.service.exception.ServiceException;
 
 public interface EmailService {
 	
@@ -12,16 +13,8 @@ public interface EmailService {
 	 * and can login.
 	 *  
 	 * @param user to be send email to with activation code
-	 */
-	void sendUserActivationEmail(UserEntry userToSendActinactionLink);
-	
-	
-	/** 
-	 * Sends email with password to the user.
 	 * 
-	 * The email will contain password which will be used by the user to login to the system.
-	 * 
-	 * @param user
+	 * @throws ServiceException if there was problem with sending email
 	 */
-	void sendUserPasswordEmail(UserEntry userToSendPassword);
+	void sendUserActivationEmail(UserEntry userToSendActinactionLink) throws ServiceException;
 }

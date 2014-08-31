@@ -16,7 +16,7 @@ public interface UserDao {
 	 * 
 	 * @throws ServiceException if there was general DB problem while checking the existence of user
 	 */
-	boolean isUserExisting(int userId) throws UserDaoException;
+	boolean isUserExistingById(int userId) throws UserDaoException;
 	
 	/**
 	 * Checks if user exists by email.
@@ -26,7 +26,7 @@ public interface UserDao {
 	 * 
 	 * @throws ServiceException if there was general DB problem while checking the existence of user
 	 */
-	boolean isUserExisting(String email) throws UserDaoException;
+	boolean isUserExistingByEmail(String email) throws UserDaoException;
 	
 	/**
 	 * Finds user.
@@ -56,7 +56,7 @@ public interface UserDao {
 	 * 
 	 * @return user access code generated
 	 */
-	String generateUserActicationCode(int userId);
+	String setupUserActivationCode(int userId);
 	
 	/**
 	 * Activate user.
@@ -66,17 +66,6 @@ public interface UserDao {
 	 * @throws UserDaoException if there was general DB problem with activating existing user
 	 */
 	void activateExistingUser(int userId) throws UserDaoException;
-	
-	/**
-	 * Generates user password.
-	 * 
-	 * @param userId id of the user to generate password for
-	 * 
-	 * @return newly generated password
-	 * 
-	 * @throws UserDaoException if there was general DB problem with generating user password
-	 */
-	String generateUserPassword(int userId) throws UserDaoException;
 	
 	/**
 	 * Updates existing user.

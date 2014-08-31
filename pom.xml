@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.appbucket.bicycle</groupId>
-	<artifactId>BicycleMan</artifactId>
+	<artifactId>Rothar</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>Rothar Maven Webapp</name>
@@ -14,6 +14,13 @@
 	</properties>
 	<dependencies>
 
+		<!-- sending email -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+		</dependency>
+		
 		<!-- required for testing -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -85,7 +92,21 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>${org.springframework.version}</version>
 		</dependency>
-
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-core</artifactId>      
+		    <version>${org.springframework.version}</version>
+		</dependency>
+		<dependency>
+        	<groupId>org.springframework.security</groupId>
+        	<artifactId>spring-security-config</artifactId>
+        	<version>${org.springframework.version}</version>
+    	</dependency>
+		<dependency>
+        	<groupId>org.springframework.security</groupId>
+        	<artifactId>spring-security-web</artifactId>
+        	<version>${org.springframework.version}</version>
+    	</dependency>
 		<!-- required for MySql DB -->
 		<dependency>
 			<groupId>mysql</groupId>
