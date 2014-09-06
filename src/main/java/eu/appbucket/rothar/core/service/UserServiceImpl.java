@@ -1,12 +1,18 @@
 package eu.appbucket.rothar.core.service;
 
+import java.util.Collection;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import eu.appbucket.rothar.core.domain.email.EmailService;
+import eu.appbucket.rothar.core.domain.user.RoleEntry;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
+import eu.appbucket.rothar.core.persistence.RoleDao;
 import eu.appbucket.rothar.core.persistence.UserDao;
+import eu.appbucket.rothar.core.persistence.exception.RoleDaoException;
 import eu.appbucket.rothar.core.persistence.exception.UserDaoException;
 import eu.appbucket.rothar.core.service.exception.ServiceException;
 
@@ -14,6 +20,7 @@ import eu.appbucket.rothar.core.service.exception.ServiceException;
 public class UserServiceImpl implements UserService {
 	
 	private UserDao userDao;
+	private RoleDao roleDao;
 	private EmailService emailService;
 	
 	@Autowired
@@ -26,13 +33,29 @@ public class UserServiceImpl implements UserService {
 		this.emailService = emailService;
 	}
 	
-	public boolean isUserExisting(UserEntry userToCheckForExistence) throws ServiceException {
+	@Autowired
+	public void setRoleDao(RoleDao roleDao) {
+		this.roleDao = roleDao;
+	}
+	
+	public boolean isUserExistingById(UserEntry userToCheckForExistence) throws ServiceException {
 		boolean userExists = false;
 		int userId = userToCheckForExistence.getUserId();
 		try {
 			userExists = userDao.isUserExistingById(userId);
 		} catch (UserDaoException userDaoException) {
 			throw new ServiceException("Problem checking existence of the user with id: " + userId, userDaoException);
+		}	
+		return userExists;
+	}
+	
+	public boolean isUserExistingByEmail(UserEntry userToCheckForExistence) throws ServiceException {
+		boolean userExists = false;
+		String email = userToCheckForExistence.getEmail();
+		try {
+			userExists = userDao.isUserExistingByEmail(email);
+		} catch (UserDaoException userDaoException) {
+			throw new ServiceException("Problem checking existence of the user with email: " + email, userDaoException);
 		}	
 		return userExists;
 	}
@@ -48,26 +71,67 @@ public class UserServiceImpl implements UserService {
 		return userDoesntExists;
 	}
 	
-	public UserEntry findUser(int userId) throws ServiceException {
+	public UserEntry findUserById(int userId) throws ServiceException {
 		assertUserExistsById(userId);
+		UserEntry foundUser = findUserDataById(userId);
+		foundUser.addRoles(findRolesForUser(foundUser.getUserId()));
+		return foundUser;
+	}
+
+	private UserEntry findUserDataById(int userId) throws ServiceException {
 		UserEntry foundUser = null;
 		try {
 			foundUser = userDao.findUserById(userId);
 		} catch (UserDaoException userDaoException) {
-			throw new ServiceException("Can't find user: " + userId, userDaoException);
+			throw new ServiceException("Can't find user with id: " + userId, userDaoException);
 		}
 		return foundUser;
 	}
-
+	
+	private Collection<RoleEntry> findRolesForUser(int userId) throws ServiceException {
+		Collection<RoleEntry> roles = null;
+		try {
+			roles = roleDao.findRolesByUserId(userId);
+		} catch (RoleDaoException roleDaoException) {
+			throw new ServiceException("Can't find roles for user with id: " + userId, roleDaoException);
+		}
+		return roles;
+	}
+	
+	public UserEntry findUserByEmail(String email) throws ServiceException {
+		assertUserExistsByEmail(email);
+		UserEntry foundUser = findUserDataByEmail(email);
+		foundUser.addRoles(findRolesForUser(foundUser.getUserId()));
+		return foundUser;
+	}
+	
+	private UserEntry findUserDataByEmail(String email) throws ServiceException {
+		UserEntry foundUser = null;
+		try {
+			foundUser = userDao.findUserByEmail(email);
+		} catch (UserDaoException userDaoException) {
+			throw new ServiceException("Can't find user with email: " + email, userDaoException);
+		}
+		return foundUser;
+	}
 	private void assertUserExistsById(Integer userId) throws ServiceException {
 		UserEntry userToCheckForExistence = new UserEntry();
 		userToCheckForExistence.setUserId(userId);
-		boolean userExists = isUserExisting(userToCheckForExistence);
+		boolean userExists = isUserExistingById(userToCheckForExistence);
 		if(!userExists) {
-			throw new ServiceException("User: " + userId + " doesn't exists.");
+			throw new ServiceException("User with id: " + userId + " doesn't exists.");
 		}
 	}
 
+	private void assertUserExistsByEmail(String email) throws ServiceException {
+		UserEntry userToCheckForExistence = new UserEntry();
+		userToCheckForExistence.setEmail(email);
+		boolean userExists = isUserExistingByEmail(userToCheckForExistence);
+		if(!userExists) {
+			throw new ServiceException("User with email: " + email + " doesn't exists.");
+		}
+	}
+	
 	@Transactional
 	public UserEntry createUser(UserEntry userToBeCreated)
 			throws ServiceException {
@@ -125,14 +189,29 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional
 	public void updateUser(UserEntry userToBeUpdated) throws ServiceException {
+		assertUserExistsById(userToBeUpdated.getUserId());
 		assertUserIsActivated(userToBeUpdated.getUserId());
+		assertRequiredInformationIsProvided(userToBeUpdated);
 		updateExistingUser(userToBeUpdated);
 	}
 	
 	private void assertUserIsActivated(Integer userIdToBeChecked) throws ServiceException {
-		UserEntry user = findUser(userIdToBeChecked);
+		UserEntry user = findUserDataById(userIdToBeChecked);
 		if(!user.isActivated()) {
 			throw new ServiceException("User with id: " + userIdToBeChecked + " is not activated.");
+		}
+	}
+	
+	/**
+	 * @param userToBeUpdated
+	 * @throws ServiceException
+	 */
+	private void assertRequiredInformationIsProvided(UserEntry userToBeUpdated) throws ServiceException {
+		if(StringUtils.isEmpty(userToBeUpdated.getEmail())) {
+			throw new ServiceException("Email address is empty for user with id: " + userToBeUpdated.getUserId());
+		}
+		if(StringUtils.isEmpty(userToBeUpdated.getName())) {
+			throw new ServiceException("Name is empty for user with id: " + userToBeUpdated.getUserId());
 		}
 	}
 	

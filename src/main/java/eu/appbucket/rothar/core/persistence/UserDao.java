@@ -1,6 +1,5 @@
 package eu.appbucket.rothar.core.persistence;
 
-import eu.appbucket.rothar.core.domain.asset.AssetEntry;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.persistence.exception.AssetDaoException;
 import eu.appbucket.rothar.core.persistence.exception.UserDaoException;
@@ -14,7 +13,7 @@ public interface UserDao {
 	 * @param userId ID of the user to check for existence
 	 * @return TRUE if user exists, FALSE if not
 	 * 
-	 * @throws ServiceException if there was general DB problem while checking the existence of user
+	 * @throws UserDaoException if there was general DB problem while checking the existence of user
 	 */
 	boolean isUserExistingById(int userId) throws UserDaoException;
 	
@@ -24,7 +23,7 @@ public interface UserDao {
 	 * @param email address of the user to check for existence
 	 * @return TRUE if user exists, FALSE if not
 	 * 
-	 * @throws ServiceException if there was general DB problem while checking the existence of user
+	 * @throws UserDaoException if there was general DB problem while checking the existence of user
 	 */
 	boolean isUserExistingByEmail(String email) throws UserDaoException;
 	
@@ -34,9 +33,19 @@ public interface UserDao {
 	 * @param userId ID of the user to be found
 	 * @return found user or new (empty) user if non was found
 	 * 
-	 * @throws AssetDaoException if there was general DB problem while finding the asset
+	 * @throws UserDaoException if there was general DB problem while finding the asset
 	 */
 	UserEntry findUserById(int userId) throws UserDaoException;
+	
+	/**
+	 * Finds user.
+	 * 
+	 * @param email of the user to be found
+	 * @return found user or new (empty) user if non was found
+	 * 
+	 * @throws UserDaoException if there was general DB problem while finding the asset
+	 */
+	UserEntry findUserByEmail(String email) throws UserDaoException;
 	
 	/**
 	 * Creates new user.
@@ -69,6 +78,7 @@ public interface UserDao {
 	
 	/**
 	 * Updates existing user.
+	 * Only selected information can be updated.
 	 * 
 	 * @param userToBeUpdate data which needs to be updated in the user
 	 * 

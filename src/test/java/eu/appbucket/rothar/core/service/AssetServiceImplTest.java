@@ -101,7 +101,7 @@ public class AssetServiceImplTest {
 		context.checking(new Expectations() {{
 			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)));
 			will(returnValue(false));
-			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
+			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(true));
             oneOf(assetDaoMock).createNewAsset(with(any(AssetEntry.class)));
 		}});
@@ -113,7 +113,7 @@ public class AssetServiceImplTest {
 		context.checking(new Expectations() {{
 			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)));
 			will(returnValue(false));
-			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
+			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(false));
 		}});
 		test.createAsset(testAsset);
@@ -133,7 +133,7 @@ public class AssetServiceImplTest {
 		context.checking(new Expectations() {{
 			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)));
 			will(returnValue(false));
-			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
+			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(true));
 			oneOf(assetDaoMock).createNewAsset(with(any(AssetEntry.class)));
 			will(throwException(new AssetDaoException("")));
@@ -146,7 +146,7 @@ public class AssetServiceImplTest {
 		context.checking(new Expectations() {{
 			oneOf(assetDaoMock).isAssetExisting(with(any(Integer.class)));
 			will(returnValue(true));
-			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
+			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(true));
 			oneOf(assetDaoMock).isAssetOwnedByUser(with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(true));
@@ -169,7 +169,7 @@ public class AssetServiceImplTest {
 		context.checking(new Expectations() {{
 			oneOf(assetDaoMock).isAssetExisting(with(any(Integer.class)));
 			will(returnValue(true));
-			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
+			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(false));
 		}});
 		test.updateAsset(testAsset);
@@ -180,7 +180,7 @@ public class AssetServiceImplTest {
 		context.checking(new Expectations() {{
 			oneOf(assetDaoMock).isAssetExisting(with(any(Integer.class)));
 			will(returnValue(true));
-			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
+			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(true));
 			oneOf(assetDaoMock).isAssetOwnedByUser(with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(false));			
@@ -193,7 +193,7 @@ public class AssetServiceImplTest {
 		context.checking(new Expectations() {{
 			oneOf(assetDaoMock).isAssetExisting(with(any(Integer.class)));
 			will(returnValue(true));
-			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
+			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(true));
 			oneOf(assetDaoMock).isAssetOwnedByUser(with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(true));
@@ -208,7 +208,7 @@ public class AssetServiceImplTest {
 		context.checking(new Expectations() {{
 			oneOf(assetDaoMock).isAssetExisting(with(any(Integer.class)));
 			will(returnValue(true));
-			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
+			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(true));
 			oneOf(assetDaoMock).isAssetOwnedByUser(with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(true));
@@ -234,7 +234,7 @@ public class AssetServiceImplTest {
 		context.checking(new Expectations() {{
 			oneOf(assetDaoMock).isAssetExisting(with(any(Integer.class)));
 			will(returnValue(true));
-			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
+			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(false));
 		}});
 		test.findAsset(testAsset.getUserId(), testAsset.getAssetId());
@@ -245,7 +245,7 @@ public class AssetServiceImplTest {
 		context.checking(new Expectations() {{
 			oneOf(assetDaoMock).isAssetExisting(with(any(Integer.class)));
 			will(returnValue(true));
-			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
+			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(true));
 			oneOf(assetDaoMock).isAssetOwnedByUser(with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(false));
@@ -259,7 +259,7 @@ public class AssetServiceImplTest {
 		context.checking(new Expectations() {{
 			oneOf(assetDaoMock).isAssetExisting(with(any(Integer.class)));
 			will(returnValue(true));
-			oneOf(userServiceMock).isUserExisting(with(any(UserEntry.class)));
+			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(true));
 			oneOf(assetDaoMock).isAssetOwnedByUser(with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(true));

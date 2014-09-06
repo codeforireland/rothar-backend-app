@@ -17,7 +17,7 @@ public interface UserService {
 	 * 
 	 * @throws ServiceException if there was general DB problem while checking the existence of user
 	 */
-	boolean isUserExisting(UserEntry userToCheckForExistence) throws ServiceException;
+	boolean isUserExistingById(UserEntry userToCheckForExistence) throws ServiceException;
 	
 	/**
 	 * Finds user.
@@ -30,7 +30,20 @@ public interface UserService {
 	 * or
 	 * - there was general DB problem during finding the user
 	 */
-	UserEntry findUser(int userId) throws ServiceException;
+	UserEntry findUserById(int userId) throws ServiceException;
+	
+	/**
+	 * Finds user.
+	 * 
+	 * @param email of the user to be found
+	 * @return found user
+	 * 
+	 * @throws ServiceException if:
+	 * - user doesn't exists
+	 * or
+	 * - there was general DB problem during finding the user
+	 */
+	UserEntry findUserByEmail(String email) throws ServiceException;
 	
 	/**
 	 * Create new user.

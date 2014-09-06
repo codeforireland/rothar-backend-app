@@ -8,7 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.appbucket.rothar.core.domain.email.EmailService;
+import eu.appbucket.rothar.core.domain.user.RoleEntry;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
+import eu.appbucket.rothar.core.persistence.RoleDao;
 import eu.appbucket.rothar.core.persistence.UserDao;
 import eu.appbucket.rothar.core.persistence.exception.UserDaoException;
 import eu.appbucket.rothar.core.service.exception.ServiceException;
@@ -23,6 +25,7 @@ public class UserServiceImplTest {
 	private UserEntry testUserWhichIsNotActivated;
 	private UserDao userDaoMock;
 	private EmailService emailServiceMock;
+	private RoleDao roleDaoMock;
 	
 	@Before
 	public void setup() {
@@ -32,6 +35,10 @@ public class UserServiceImplTest {
 		testUser.setEmail("email-address");
 		testUser.setPassword("generated-password");
 		testUser.setActivationCode("generated-activation-code");
+		testUser.setName("user-name");
+		RoleEntry userRole = new RoleEntry();
+		userRole.setName("USER_ROLE");
+		testUser.addRole(userRole);
 		testUserWithInvalidActivationCode = new UserEntry();
 		testUserWithInvalidActivationCode.setActivationCode("invalid-activation-code");
 		testUserWhichIsActivated = new UserEntry();
@@ -44,6 +51,8 @@ public class UserServiceImplTest {
 		test.setUserDao(userDaoMock);
 		emailServiceMock = context.mock(EmailService.class);
 		test.setEmailService(emailServiceMock);
+		roleDaoMock = context.mock(RoleDao.class);
+		test.setRoleDao(roleDaoMock);
 	}
 	
 	@Test
@@ -52,7 +61,7 @@ public class UserServiceImplTest {
             oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(true));
 		}});
-		boolean userExists = test.isUserExisting(testUser);
+		boolean userExists = test.isUserExistingById(testUser);
 		Assert.assertTrue(userExists);
 	}
 	
@@ -62,7 +71,7 @@ public class UserServiceImplTest {
             oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(false));
 		}});
-		boolean userExists = test.isUserExisting(testUser);
+		boolean userExists = test.isUserExistingById(testUser);
 		Assert.assertFalse(userExists);
 	}
 	
@@ -72,7 +81,7 @@ public class UserServiceImplTest {
             oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(throwException(new UserDaoException("")));
 		}});
-		test.isUserExisting(testUser);
+		test.isUserExistingById(testUser);
 	}
 	
 	@Test
@@ -82,8 +91,10 @@ public class UserServiceImplTest {
             will(returnValue(true));
             oneOf(userDaoMock).findUserById(with(any(Integer.class)));
             will(returnValue(testUser));
+            oneOf(roleDaoMock).findRolesByUserId(with(any(Integer.class)));
+            will(returnValue(testUser.getRoles()));
 		}});
-		UserEntry actuallResult = test.findUser(testUser.getUserId());
+		UserEntry actuallResult = test.findUserById(testUser.getUserId());
 		UserEntry expectedResult = testUser;
 		Assert.assertEquals(expectedResult, actuallResult);
 	}
@@ -94,7 +105,7 @@ public class UserServiceImplTest {
             oneOf(userDaoMock).isUserExistingById(with(any(Integer.class)));
             will(returnValue(false));
 		}});
-		test.findUser(testUser.getUserId());
+		test.findUserById(testUser.getUserId());
 	}
 	
 	@Test(expected=ServiceException.class)
@@ -105,7 +116,7 @@ public class UserServiceImplTest {
             oneOf(userDaoMock).findUserById(with(any(Integer.class)));
             will(throwException(new UserDaoException("")));
 		}});
-		test.findUser(testUser.getUserId());
+		test.findUserById(testUser.getUserId());
 	}
 	
 	@Test

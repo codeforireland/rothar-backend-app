@@ -76,7 +76,7 @@ public class AssetServiceImpl implements AssetService {
 	private void assertUserExist(int userId) throws ServiceException {
 		UserEntry userToCheckForExistence = new UserEntry();
 		userToCheckForExistence.setUserId(userId);
-		boolean userExists = userService.isUserExisting(userToCheckForExistence);
+		boolean userExists = userService.isUserExistingById(userToCheckForExistence);
 		if(!userExists) {
 			throw new ServiceException("User: " + userId + " doesn't exists.");
 		}

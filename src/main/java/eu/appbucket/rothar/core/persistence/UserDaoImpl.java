@@ -23,7 +23,7 @@ public class UserDaoImpl implements UserDao {
 	
 	private static final String FIND_USER_BY_ID_QUERY = "SELECT * FROM users where user_id = ?";
 	
-	private static final String FIND_USER_BY_EMAIL = "SELECT * FROM users where email = ?";
+	private static final String FIND_USER_BY_EMAIL_QUERY = "SELECT * FROM users where email = ?";
 	
 	private static final String IS_USER_EXISTING_BY_ID_QUERY = "SELECT count(*) from users "
 			+ " WHERE user_id = ?";
@@ -35,12 +35,16 @@ public class UserDaoImpl implements UserDao {
 			+ "(email, name, password, activated, created) "
 			+ "values (?, ?, ?, ?) ";
 	
-	private static final String STORE_USER_ACTIVATION_CODE = "UPDATE users "
+	private static final String STORE_USER_ACTIVATION_CODE_QUERY = "UPDATE users "
 			+ "set activation_code = ? "
 			+ "where user_id = ?";
 	
-	private static final String ACTIVATE_USER = "UPDATE users "
+	private static final String ACTIVATE_USER_QUERY = "UPDATE users "
 			+ "set activated = 1 "
+			+ "where user_id = ?";
+	
+	private static final String UPDATE_USER_QUERY = "UPDATE users "
+			+ "set name = ?, email = ? "
 			+ "where user_id = ?";
 	
 	@Autowired
@@ -77,7 +81,7 @@ public class UserDaoImpl implements UserDao {
 	public UserEntry findUserByEmail(String email) throws UserDaoException {
 		UserEntry user = null;
 		try {
-			user = jdbcTempalte.queryForObject(FIND_USER_BY_EMAIL, new UserEntryMapper(), email);	
+			user = jdbcTempalte.queryForObject(FIND_USER_BY_EMAIL_QUERY, new UserEntryMapper(), email);	
 		} catch(EmptyResultDataAccessException emptyResultDataAccessException) {
 			user = new UserEntry();
 		} catch (DataAccessException dataAccessException) {
@@ -144,7 +148,7 @@ public class UserDaoImpl implements UserDao {
 	
 	private void storeUserActivationCodeForUser(String activationCode, int userId){
 		try {
-			jdbcTempalte.update(STORE_USER_ACTIVATION_CODE,
+			jdbcTempalte.update(STORE_USER_ACTIVATION_CODE_QUERY,
 				activationCode,
 				userId);
 		} catch (DataAccessException dataAccessException) {
@@ -155,7 +159,7 @@ public class UserDaoImpl implements UserDao {
 	
 	public void activateExistingUser(int userId) throws UserDaoException {
 		try {
-			jdbcTempalte.update(ACTIVATE_USER,
+			jdbcTempalte.update(ACTIVATE_USER_QUERY,
 				userId);
 		} catch (DataAccessException dataAccessException) {
 			throw new AssetDaoException(
@@ -163,14 +167,15 @@ public class UserDaoImpl implements UserDao {
 		}
 	}
 
-	public String generateUserPassword(int userId) throws UserDaoException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void updateExistingUser(UserEntry userToBeUpdate)
-			throws UserDaoException {
-		// TODO Auto-generated method stub
-		
+	public void updateExistingUser(UserEntry userToBeUpdate) throws UserDaoException {
+		try {
+			jdbcTempalte.update(UPDATE_USER_QUERY,
+					userToBeUpdate.getName(),
+					userToBeUpdate.getEmail(),
+					userToBeUpdate.getUserId());
+		} catch (DataAccessException dataAccessException) {
+			throw new AssetDaoException(
+					"Can't update user with id: " + userToBeUpdate.getUserId(), dataAccessException);
+		}
 	}
 }

@@ -1,6 +1,9 @@
 package eu.appbucket.rothar.core.domain.user;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 
 import eu.appbucket.rothar.web.domain.user.UserData;
 
@@ -14,6 +17,22 @@ public class UserEntry {
 	private Date created;
 	private boolean activated;
 	private String activationCode;
+	private Collection<RoleEntry> roles = new HashSet<RoleEntry>();
+	
+	public Collection<RoleEntry> getRoles() {
+		Collection<RoleEntry> roles = new HashSet<RoleEntry>(this.roles);
+		return roles;
+	}
+	
+	public void addRole(RoleEntry role) {
+		roles.add(role);
+	}
+	
+	public void addRoles(Collection<RoleEntry> roles) {
+		for(RoleEntry role: roles) {
+			roles.add(role);
+		}
+	}
 	
 	public String getActivationCode() {
 		return activationCode;

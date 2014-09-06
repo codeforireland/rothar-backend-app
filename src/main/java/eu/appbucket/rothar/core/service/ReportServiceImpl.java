@@ -35,7 +35,7 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	private void assertUserExists(Integer userId) {
-		userService.findUser(userId);
+		userService.findUserById(userId);
 	}
 	
 	public List<ReportEntry> findReportEntries(ReportEntryFilter filter) {

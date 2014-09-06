@@ -1,4 +1,8 @@
-﻿drop table `users`;
+﻿drop table `user_roles`;
+
+drop table `users`;
+
+drop table `roles`;
 
 CREATE TABLE `users` (
   `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -11,7 +15,6 @@ CREATE TABLE `users` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 insert into `users` (`user_id`, `email`, `name`, `activated`, `activation_code`, `password`, `created`)
 values (1, 'adam@bednarski.pl', 'Adam Bednarski', 1, '4bc4fd71-0bb3-4b42-a509-c2ba16ade405', 'adam', now()); 
 
@@ -21,3 +24,30 @@ values (2, 'philip@murphy.ie', 'Philip Murphy', 1, '9df78d5a-cfe5-42f0-a5f4-98fc
 insert into `users` (`user_id`, `email`, `name`, `activated`, `activation_code`, `password`, `created`)
 values (3, 'mark@montgomerie.nz', 'Mark Montgomerie', 1, '995326c1-35cc-48a7-9398-15f1d4e0eca1', 'mark', now());
 
+CREATE TABLE `roles` (
+  `role_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+insert into `roles` (`role_id`, `name`)
+values (1, 'ROLE_USER');
+
+CREATE TABLE `user_roles` (
+  `user_id` int(10) unsigned NOT NULL,
+  `role_id` int(10) unsigned NOT NULL,
+	PRIMARY KEY (`user_id`, `role_id`),
+	FOREIGN KEY (`user_id`)
+		REFERENCES `users`(`user_id`),
+	FOREIGN KEY (`role_id`)
+		REFERENCES `roles`(`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+insert into `user_roles` (`user_id`, `role_id`)
+values (1, 1); 
+
+insert into `user_roles` (`user_id`, `role_id`)
+values (2, 1);
+
+insert into `user_roles` (`user_id`, `role_id`)
+values (3, 1);
