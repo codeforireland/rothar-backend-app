@@ -3,7 +3,6 @@ package eu.appbucket.rothar.web.security;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,18 +10,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
 
 import eu.appbucket.rothar.core.domain.user.RoleEntry;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.service.UserService;
 
-@Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	private UserService userService;
 	
-	@Autowired
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
@@ -31,7 +27,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			throws AuthenticationException {
 		String login = authentication.getName();
 		String password = authentication.getCredentials().toString();
-		UserEntry user = userService.findUserByEmail(login);
+		UserEntry user = findUserByEmail(login);
 		if(userIsActivated(user) && passwordIsCorrect(user, password)) {
 			List<GrantedAuthority> grantedAuths = convertUserRolesToGrantedAuthorities(user);
 	        Authentication auth = new UsernamePasswordAuthenticationToken(login, password, grantedAuths);
@@ -39,6 +35,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		} else {
 			throw new BadCredentialsException("Password for the login: " + login + " is incorrect.");
 		}
+	}
+	
+	private UserEntry findUserByEmail(String email) {
+		return userService.findUserByEmail(email);
 	}
 	
 	private boolean userIsActivated(UserEntry user) {

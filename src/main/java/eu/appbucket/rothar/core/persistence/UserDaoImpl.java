@@ -33,7 +33,7 @@ public class UserDaoImpl implements UserDao {
 	
 	private static final String CREATE_USER_QUERY = "INSERT INTO users "
 			+ "(email, name, password, activated, created) "
-			+ "values (?, ?, ?, ?) ";
+			+ "values (?, ?, ?, ?, ?) ";
 	
 	private static final String STORE_USER_ACTIVATION_CODE_QUERY = "UPDATE users "
 			+ "set activation_code = ? "

@@ -5,10 +5,14 @@
 
 curl -H \
 	"Content-Type: application/json" \
+	-X GET \
+	"http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/2/assets/20/reports?limit=1&sort=created"
+
+curl -i -H \
+	"Content-Type: application/json" \
 	-X POST -d '{"latitude":"53.271534", "longitude":"-6.315946"}' \
-	http://localhost:8080/Rothar/v1/users/2/assets/20/reports 
-
-
+	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/2/assets/20/reports 
+	
 ## ASSETS ##
 
 # get assets list for the user
@@ -16,15 +20,28 @@ curl -H \
 curl -H \
 	"Content-Type: application/json" \
 	-X GET \
-	http://localhost:8080/Rothar/v1/users/2/assets
+	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/2/assets
 
 # create the asset for user
 
+curl -i -H \
+	"Content-Type: application/json" \
+	-X POST -d '{"uuid":"39efdca2-918a-428d-8ad2-daff67ee1c8e", "minor":"1", "major":"1", "description":"red bike"}' \
+	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/1/assets
+
+# update existing asset
+
+curl -i -H \
+	"Content-Type: application/json" \
+	-X PUT -d '{"description":"red bike", "status":"STOLEN"}' \
+	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/1/assets/10
+
+# get all assets for the user:
+
 curl -H \
 	"Content-Type: application/json" \
-	-X POST -d '{"uuid":"39efdca2-918a-428d-8ad2-daff67ee1c9e", "minor":"1", "major":"1", "description":"red bike"}' \
-	http://localhost:8080/Rothar/v1/users/1/assets
-
+	-X GET \
+	"http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/1/assets?limit=5&sort=status"
 	 
 ## USERS ##
 
@@ -33,7 +50,7 @@ curl -H \
 curl -H \
 	"Content-Type: application/json" \
 	-X GET \
-	http://localhost:8080/Rothar/v1/users/1
+	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/1
 
 # register new user
 
@@ -47,5 +64,12 @@ curl -H \
 curl -H \
 	"Content-Type: application/json" \
 	-X GET \
-	http://localhost:8080/Rothar/v1/users/1/code/4bc4fd71-0bb3-4b42-a509-c2ba16ade405
-	
+	http://localhost:8080/Rothar/v1/users/4/code/a46a919e-510e-41a8-b5b6-bc8e42370f2c
+
+# udpate user details
+
+curl -H \
+	"Content-Type: application/json" \
+	-X PUT -d '{"name":"Adam1", "email":"adam@bednarski.pl"}' \
+	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/1
+

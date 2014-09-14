@@ -73,9 +73,12 @@ public class UserController {
 	
 	@RequestMapping(value = "v1/users/{userIdToUpdate}", method = RequestMethod.PUT)
 	@ResponseBody
-	public void updateUser(@RequestBody UserData userDataToBeUpdated) {
+	public void updateUser(
+			@PathVariable Integer userIdToUpdate,
+			@RequestBody UserData userDataToBeUpdated) {
 		LOGGER.info("updateUser");
 		UserEntry userEntryToBeUpdated = UserEntry.fromUserData(userDataToBeUpdated);
+		userEntryToBeUpdated.setUserId(userIdToUpdate);
 		userService.updateUser(userEntryToBeUpdated);
 	}
 }

@@ -2,12 +2,12 @@
 
 <beans 
 	xmlns="http://www.springframework.org/schema/beans"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:cache="http://www.springframework.org/schema/cache"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -20,11 +20,13 @@
   		http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop.xsd">
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd">
 
 	<context:property-placeholder/>
+	
 	<context:component-scan base-package="eu.appbucket.rothar" />
-	<mvc:annotation-driven />
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
@@ -62,5 +64,5 @@
             </props>
         </property>
 	</bean>
-
+	
 </beans>

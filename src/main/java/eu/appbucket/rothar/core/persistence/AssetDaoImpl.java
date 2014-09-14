@@ -36,7 +36,7 @@ public class AssetDaoImpl implements AssetDao {
 			+ "values (?, ?, ?, ?, ?, ?, ?)";
 	
 	public static final String UPDATE_ASSET_QUERY = "UPDATE assets "
-			+ " SET status_id = ?, description = ?)";
+			+ " SET status_id = ?, description = ? where asset_id = ?";
 	
 	public static final String FIND_ASSET_BY_ASSET_ID_AND_USER_ID_QUERY = "SELECT * from assets "
 			+ " WHERE user_id = ?, asset_id = ?";
@@ -81,7 +81,7 @@ public class AssetDaoImpl implements AssetDao {
 	
 	public boolean isAssetOwnedByUser(int assetId, int userId) throws AssetDaoException {
 		try {
-			int count = jdbcTempalte.queryForInt(IS_ASSET_OWNED_BY_USER_QUERY, assetId);
+			int count = jdbcTempalte.queryForInt(IS_ASSET_OWNED_BY_USER_QUERY, assetId, userId);
 			if(count > 0) {
 				return true;
 			}

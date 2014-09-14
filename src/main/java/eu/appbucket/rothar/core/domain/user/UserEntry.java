@@ -28,8 +28,8 @@ public class UserEntry {
 		roles.add(role);
 	}
 	
-	public void addRoles(Collection<RoleEntry> roles) {
-		for(RoleEntry role: roles) {
+	public void addRoles(Collection<RoleEntry> rolesToAdd) {
+		for(RoleEntry role: rolesToAdd) {
 			roles.add(role);
 		}
 	}
@@ -94,6 +94,7 @@ public class UserEntry {
 		UserEntry entry = new UserEntry();
 		entry.setEmail(data.getEmail());
 		entry.setName(data.getName());
+		entry.setPassword(data.getPassword());
 		return entry;
 	}
 }

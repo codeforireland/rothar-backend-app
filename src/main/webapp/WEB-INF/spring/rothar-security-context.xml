@@ -14,13 +14,17 @@
 
 
 	<security:http auto-config="true" create-session="stateless">
-		<security:intercept-url pattern="/**" access="ROLE_USER" />
+		<security:intercept-url pattern="/v1/users" access="ROLE_ANONYMOUS"/>
+		<security:intercept-url pattern="/v1/users/*/code/*" access="ROLE_ANONYMOUS"/>
+		<security:intercept-url pattern="/**" access="ROLE_USER"/>
 		<security:http-basic />
 	</security:http>
 	
 	<bean
 		id="customAuthenticationProvider" 
-		class="eu.appbucket.rothar.web.security.CustomAuthenticationProvider"/>
+		class="eu.appbucket.rothar.web.security.CustomAuthenticationProvider">
+		<property name="userService" ref="userServiceImpl"/>
+	</bean>
 	
 	<security:authentication-manager>
 		<security:authentication-provider ref="customAuthenticationProvider" />

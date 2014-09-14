@@ -1,12 +1,8 @@
 package eu.appbucket.rothar.core.service;
 
-import org.springframework.stereotype.Service;
-
 import eu.appbucket.rothar.core.domain.user.UserEntry;
-import eu.appbucket.rothar.core.persistence.exception.AssetDaoException;
 import eu.appbucket.rothar.core.service.exception.ServiceException;
 
-@Service
 public interface UserService {
 	
 	/**

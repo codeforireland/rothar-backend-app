@@ -5,10 +5,10 @@
 <web-app>
 
 	<display-name>Rothar backend</display-name>
-
+	
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/security-context.xml</param-value>
+		<param-value>/WEB-INF/spring/rothar-application-context.xml,WEB-INF/spring/rothar-security-context.xml</param-value>
 	</context-param>
 
 	<filter>
@@ -39,13 +39,21 @@
 		</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring/application-context.xml</param-value>
+			<param-value>/WEB-INF/spring/rothar-dispatcher-context.xml</param-value>
 		</init-param>
 	</servlet>
-
+	<servlet>
+		<servlet-name>keep-alive</servlet-name>
+		<display-name>KeepAlive</display-name>
+		<servlet-class>eu.appbucket.rothar.web.servlet.KeepAlive</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>rothar-dispatcher</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
+	<servlet-mapping>
+		<servlet-name>keep-alive</servlet-name>
+		<url-pattern>/keep-alive</url-pattern>
+	</servlet-mapping>
 </web-app>
