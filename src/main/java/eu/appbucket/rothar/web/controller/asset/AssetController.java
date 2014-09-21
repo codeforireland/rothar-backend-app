@@ -10,6 +10,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,6 @@ import eu.appbucket.rothar.core.domain.asset.AssetEntry;
 import eu.appbucket.rothar.core.domain.asset.AssetFilter;
 import eu.appbucket.rothar.core.service.AssetService;
 import eu.appbucket.rothar.web.domain.asset.AssetData;
-import eu.appbucket.rothar.web.domain.report.ReportData;
 
 @Controller
 public class AssetController {
@@ -35,7 +35,7 @@ public class AssetController {
 		this.assetService = assetService;
 	}
 	
-	@RequestMapping(value = "v1/users/{ownerId}/assets", method = RequestMethod.POST)
+	@RequestMapping(value = {"v1/users/{ownerId}/assets", "v2/users/{ownerId}/assets"}, method = RequestMethod.POST)
 	@ResponseBody
 	public void createOwnerAsset(
 			@PathVariable Integer ownerId, 
@@ -46,7 +46,7 @@ public class AssetController {
 		assetService.createAsset(assetEntry);
 	}
 	
-	@RequestMapping(value = "v1/users/{ownerId}/assets/{assetId}", 
+	@RequestMapping(value = {"v1/users/{ownerId}/assets/{assetId}", "v2/users/{ownerId}/assets/{assetId}"}, 
 			method = RequestMethod.PUT)
 	@ResponseBody
 	public void updateOwnerAsset(
@@ -60,7 +60,7 @@ public class AssetController {
 		assetService.updateAsset(assetEntry);
 	}
 	
-	@RequestMapping(value = "v1/users/{ownerId}/assets", method = RequestMethod.GET)
+	@RequestMapping(value = {"v1/users/{ownerId}/assets", "v2/users/{ownerId}/assets"}, method = RequestMethod.GET)
 	@ResponseBody
 	public List<AssetData> getOwnerAssets(
 			@PathVariable Integer ownerId,

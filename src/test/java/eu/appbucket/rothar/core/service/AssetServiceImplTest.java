@@ -16,6 +16,7 @@ import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.persistence.AssetDao;
 import eu.appbucket.rothar.core.persistence.exception.AssetDaoException;
 import eu.appbucket.rothar.core.service.exception.ServiceException;
+import eu.appbucket.rothar.core.service.v1.UserService;
 
 public class AssetServiceImplTest {
 	

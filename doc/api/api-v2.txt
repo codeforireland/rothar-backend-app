@@ -1,0 +1,17 @@
+
+## In this version of api:
+## - basic http auth is turned off 
+## - almost all URLs have this same format (obviously URL contains ../v2 instead of ../v1)
+## - URLs which are different in this version are listed bellow
+
+
+## USERS ##
+
+# find user by id
+
+# create new user
+
+curl -i -H \
+	"Content-Type: application/json, Cache-control: no-cache" \
+	-X POST \
+	http://localhost:8080/Rothar/v2/users

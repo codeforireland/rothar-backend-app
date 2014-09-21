@@ -13,7 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import eu.appbucket.rothar.core.domain.user.RoleEntry;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
-import eu.appbucket.rothar.core.service.UserService;
+import eu.appbucket.rothar.core.service.v1.UserService;
 
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 

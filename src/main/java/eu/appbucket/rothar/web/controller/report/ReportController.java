@@ -1,4 +1,4 @@
-package eu.appbucket.rothar.web.controller.asset;
+package eu.appbucket.rothar.web.controller.report;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +34,7 @@ public class ReportController {
 		this.reportService = reportService;
 	}
 	
-	@RequestMapping(value = "v1/users/{reporterId}/assets/{assetId}/reports", method = RequestMethod.POST)
+	@RequestMapping(value = {"v1/users/{reporterId}/assets/{assetId}/reports", "v2/users/{reporterId}/assets/{assetId}/reports"}, method = RequestMethod.POST)
 	@ResponseBody
 	public void createReportForAsset(
 			@PathVariable Integer reporterId, 
@@ -47,7 +48,7 @@ public class ReportController {
 		reportService.saveReportEntry(reportEntry);
 	}
 	
-	@RequestMapping(value = "v1/users/{ownerId}/assets/{assetId}/reports", method = RequestMethod.GET)
+	@RequestMapping(value = {"v1/users/{ownerId}/assets/{assetId}/reports", "v2/users/{ownerId}/assets/{assetId}/reports"}, method = RequestMethod.GET)
 	@ResponseBody
 	public List<ReportData> getReportsForAsset(
 			@PathVariable Integer ownerId,

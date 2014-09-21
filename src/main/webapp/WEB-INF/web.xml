@@ -8,7 +8,7 @@
 	
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/rothar-application-context.xml,WEB-INF/spring/rothar-security-context.xml</param-value>
+		<param-value>/WEB-INF/spring/rothar-application-context.xml,WEB-INF/spring/rothar-security-context-v1.xml</param-value>
 	</context-param>
 
 	<filter>
@@ -21,7 +21,7 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/v1/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>rothar-simple-cors</filter-name>

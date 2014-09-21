@@ -1,7 +1,8 @@
-package eu.appbucket.rothar.web.controller.asset;
+package eu.appbucket.rothar.web.controller.v1.user;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.appbucket.rothar.core.domain.email.EmailService;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
-import eu.appbucket.rothar.core.service.UserService;
+import eu.appbucket.rothar.core.service.EmailService;
+import eu.appbucket.rothar.core.service.v1.UserService;
 import eu.appbucket.rothar.web.domain.user.UserData;
 
 /*
@@ -30,7 +31,7 @@ import eu.appbucket.rothar.web.domain.user.UserData;
  * 2. If user is active and his email address is matching with the stored password user is 
  * allowed to login into the system.
 */
-@Controller
+@Controller(value="v1.userController")
 public class UserController {
 	
 	private static final Logger LOGGER = Logger.getLogger(UserController.class);	
@@ -38,6 +39,7 @@ public class UserController {
 	
 	
 	@Autowired
+	@Qualifier("v1.userService")
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
@@ -64,7 +66,7 @@ public class UserController {
 	
 	@RequestMapping(value = "v1/users/{userIdToFind}", method = RequestMethod.GET)
 	@ResponseBody
-	public UserData findUser(@PathVariable Integer userIdToFind) {
+	public UserData findUserById(@PathVariable Integer userIdToFind) {
 		LOGGER.info("findUser");
 		UserEntry foundUserEntry = userService.findUserById(userIdToFind);
 		UserData foundUserData = UserData.fromUserEntry(foundUserEntry);
@@ -80,5 +82,14 @@ public class UserController {
 		UserEntry userEntryToBeUpdated = UserEntry.fromUserData(userDataToBeUpdated);
 		userEntryToBeUpdated.setUserId(userIdToUpdate);
 		userService.updateUser(userEntryToBeUpdated);
+	}
+	
+	@RequestMapping(value = "v1/users/{userEmailToRemove}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public void removeUser(
+			@PathVariable String userEmailToRemove) {
+		LOGGER.info("removeUser");
+		UserEntry userEntryToBeRemoved = userService.findUserByEmail(userEmailToRemove);
+		userService.deleteUser(userEntryToBeRemoved);
 	}
 }

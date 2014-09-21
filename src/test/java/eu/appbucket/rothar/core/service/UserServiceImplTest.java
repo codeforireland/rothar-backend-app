@@ -7,13 +7,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.appbucket.rothar.core.domain.email.EmailService;
 import eu.appbucket.rothar.core.domain.user.RoleEntry;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.persistence.RoleDao;
 import eu.appbucket.rothar.core.persistence.UserDao;
 import eu.appbucket.rothar.core.persistence.exception.UserDaoException;
 import eu.appbucket.rothar.core.service.exception.ServiceException;
+import eu.appbucket.rothar.core.service.v1.UserServiceImpl;
 
 public class UserServiceImplTest {
 	

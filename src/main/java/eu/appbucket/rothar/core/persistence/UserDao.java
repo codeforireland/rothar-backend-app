@@ -86,4 +86,23 @@ public interface UserDao {
 	 */
 	void updateExistingUser(UserEntry userToBeUpdate) throws UserDaoException;
 	
+	/**
+	 * Removes user from DB.
+	 * 
+	 * @param userIdToBeDeleted user id to be removed
+	 * 
+	 * @throws UserDaoException if there was general DB problem with removing existing user
+	 */
+	void removeExistingUser(int userIdToBeDeleted) throws UserDaoException;
+	
+	/**
+	 * Retrieves last inserted id (for example user id)
+	 * 
+	 * This method must be run in this same transaction as the method creating user to guarantee that correct value is returned.
+	 * 
+	 * @return last inserted id
+	 * 
+	 * @throws UserDaoException if there was general DB problem with retrieving last inserted id
+	 */
+	int findLastInsertedId() throws UserDaoException;
 }

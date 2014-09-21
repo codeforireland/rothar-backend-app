@@ -1,4 +1,4 @@
-package eu.appbucket.rothar.core.domain.email;
+package eu.appbucket.rothar.core.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;

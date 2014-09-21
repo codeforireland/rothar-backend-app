@@ -13,17 +13,18 @@
 		http://www.springframework.org/schema/security/spring-security.xsd">
 
 
-	<security:http auto-config="true" create-session="stateless">
-		<security:intercept-url pattern="/v1/users" access="ROLE_ANONYMOUS"/>
-		<security:intercept-url pattern="/v1/users/*/code/*" access="ROLE_ANONYMOUS"/>
-		<security:intercept-url pattern="/**" access="ROLE_USER"/>
+	<security:http auto-config="true" create-session="stateless" use-expressions="true">
+		<security:intercept-url method="DELETE"  pattern="/v1/users/*" access="hasRole('ROLE_ANONYMOUS') and hasIpAddress('127.0.0.1')"/>
+		<security:intercept-url pattern="/v1/users" access="hasRole('ROLE_ANONYMOUS')"/>
+		<security:intercept-url pattern="/v1/users/*/code/*" access="hasRole('ROLE_ANONYMOUS')"/>
+		<security:intercept-url pattern="/v1/**" access="hasRole('ROLE_USER')"/>
 		<security:http-basic />
 	</security:http>
 	
 	<bean
 		id="customAuthenticationProvider" 
 		class="eu.appbucket.rothar.web.security.CustomAuthenticationProvider">
-		<property name="userService" ref="userServiceImpl"/>
+		<property name="userService" ref="v1.userService"/>
 	</bean>
 	
 	<security:authentication-manager>

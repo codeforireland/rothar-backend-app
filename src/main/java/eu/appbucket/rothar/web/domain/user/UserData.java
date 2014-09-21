@@ -7,7 +7,15 @@ public class UserData {
 	private String name;
 	private String email;
 	private String password;
+	private Integer userId;
 	
+	
+	public Integer getUserId() {
+		return userId;
+	}
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
 	public String getPassword() {
 		return password;
 	}
@@ -31,6 +39,7 @@ public class UserData {
 		UserData data = new UserData();
 		data.setEmail(entry.getEmail());
 		data.setName(entry.getName());
+		data.setUserId(entry.getUserId());
 		return data;
 	}
 }

@@ -1,22 +1,23 @@
-package eu.appbucket.rothar.core.service;
+package eu.appbucket.rothar.core.service.v1;
 
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import eu.appbucket.rothar.core.domain.email.EmailService;
 import eu.appbucket.rothar.core.domain.user.RoleEntry;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.persistence.RoleDao;
 import eu.appbucket.rothar.core.persistence.UserDao;
 import eu.appbucket.rothar.core.persistence.exception.RoleDaoException;
 import eu.appbucket.rothar.core.persistence.exception.UserDaoException;
+import eu.appbucket.rothar.core.service.EmailService;
 import eu.appbucket.rothar.core.service.exception.ServiceException;
 
-@Service
+@Service(value="v1.userService")
 public class UserServiceImpl implements UserService {
 	
 	private UserDao userDao;
@@ -220,6 +221,15 @@ public class UserServiceImpl implements UserService {
 			userDao.updateExistingUser(userToBeUpdated);
 		} catch (UserDaoException userDaoException) {
 			throw new ServiceException("Can't update user with id: " + userToBeUpdated.getUserId(), userDaoException);
+		}
+	}
+	
+	@Transactional
+	public void deleteUser(UserEntry userToBeDeleted) {
+		try {
+			userDao.removeExistingUser(userToBeDeleted.getUserId());
+		} catch (UserDaoException userDaoException) {
+			throw new ServiceException("Can't delete user with id: " + userToBeDeleted.getUserId(), userDaoException);
 		}
 	}
 }

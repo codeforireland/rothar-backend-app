@@ -1,4 +1,4 @@
-package eu.appbucket.rothar.core.service;
+package eu.appbucket.rothar.core.service.v1;
 
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.service.exception.ServiceException;
@@ -87,4 +87,11 @@ public interface UserService {
 	 * - there was general DB problem during updating the user
 	 */
 	void updateUser(UserEntry userToBeUpdated) throws ServiceException;
+	
+	/**
+	 * Removes user from DB along with related tables in which user is referenced
+	 * 
+	 * @param userToBeDeleted user which should be removed
+	 */
+	void deleteUser(UserEntry userToBeDeleted);
 }

@@ -1,4 +1,4 @@
-package eu.appbucket.rothar.core.domain.email;
+package eu.appbucket.rothar.core.service;
 
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.service.exception.ServiceException;

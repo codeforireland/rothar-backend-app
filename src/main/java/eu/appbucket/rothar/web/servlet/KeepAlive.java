@@ -26,5 +26,4 @@ public class KeepAlive extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
 	}
-
 }

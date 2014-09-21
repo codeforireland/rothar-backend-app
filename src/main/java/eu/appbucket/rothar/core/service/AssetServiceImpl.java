@@ -3,17 +3,17 @@ package eu.appbucket.rothar.core.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import eu.appbucket.rothar.core.domain.asset.AssetEntry;
 import eu.appbucket.rothar.core.domain.asset.AssetFilter;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.persistence.AssetDao;
 import eu.appbucket.rothar.core.persistence.exception.AssetDaoException;
-import eu.appbucket.rothar.core.persistence.exception.UserDaoException;
 import eu.appbucket.rothar.core.service.exception.ServiceException;
+import eu.appbucket.rothar.core.service.v1.UserService;
 import eu.appbucket.rothar.web.domain.asset.AssetStatus;
 
 @Service
@@ -28,6 +28,7 @@ public class AssetServiceImpl implements AssetService {
 	}
 	
 	@Autowired
+	@Qualifier("v1.userService")
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}

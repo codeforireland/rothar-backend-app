@@ -1,23 +1,40 @@
 
-## REPORTS ##
+## USERS ##
 
-# create the report for asset
-
-curl -H \
-	"Content-Type: application/json" \
-	-X GET \
-	"http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/2/assets/20/reports?limit=1&sort=created"
+# register new user
 
 curl -i -H \
 	"Content-Type: application/json" \
-	-X POST -d '{"latitude":"53.271534", "longitude":"-6.315946"}' \
-	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/2/assets/20/reports 
+	-X POST -d '{"email":"abednarski79@gmail.com", "name":"adam", "password":"xyz"}' \
+	http://localhost:8080/Rothar/v1/users
+
+# activate registered user
+
+curl -i -H \
+	"Content-Type: application/json" \
+	-X GET \
+	http://localhost:8080/Rothar/v1/users/4/code/a46a919e-510e-41a8-b5b6-bc8e42370f2c
+
+# update user details
+
+curl -i -H \
+	"Content-Type: application/json" \
+	-X PUT -d '{"name":"Adam1", "email":"adam@bednarski.pl"}' \
+	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/1
+
+# find user by id
+
+curl -i -H \
+	"Content-Type: application/json" \
+	-X GET \
+	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/1
 	
+
 ## ASSETS ##
 
 # get assets list for the user
 
-curl -H \
+curl -i -H \
 	"Content-Type: application/json" \
 	-X GET \
 	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/2/assets
@@ -38,38 +55,22 @@ curl -i -H \
 
 # get all assets for the user:
 
-curl -H \
+curl -i -H \
 	"Content-Type: application/json" \
 	-X GET \
 	"http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/1/assets?limit=5&sort=status"
 	 
-## USERS ##
 
-# find user by id
+## REPORTS ##
 
-curl -H \
+# create the report for asset
+
+curl -i -H \
 	"Content-Type: application/json" \
 	-X GET \
-	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/1
+	"http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/2/assets/20/reports?limit=1&sort=created"
 
-# register new user
-
-curl -H \
+curl -i -H \
 	"Content-Type: application/json" \
-	-X POST -d '{"email":"abednarski79@gmail.com", "name":"Adam", "password":"xyz"}' \
-	http://localhost:8080/Rothar/v1/users
-
-# activate registered user
-
-curl -H \
-	"Content-Type: application/json" \
-	-X GET \
-	http://localhost:8080/Rothar/v1/users/4/code/a46a919e-510e-41a8-b5b6-bc8e42370f2c
-
-# udpate user details
-
-curl -H \
-	"Content-Type: application/json" \
-	-X PUT -d '{"name":"Adam1", "email":"adam@bednarski.pl"}' \
-	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/1
-
+	-X POST -d '{"latitude":"53.271534", "longitude":"-6.315946"}' \
+	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v1/users/2/assets/20/reports 

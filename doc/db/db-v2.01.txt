@@ -1,0 +1,2 @@
+﻿ALTER TABLE `users` MODIFY `email` varchar(255);
+ALTER TABLE `users` MODIFY `name` varchar(255);
