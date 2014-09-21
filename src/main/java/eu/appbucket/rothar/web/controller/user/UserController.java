@@ -1,4 +1,4 @@
-package eu.appbucket.rothar.web.controller.v1.user;
+package eu.appbucket.rothar.web.controller.user;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class UserController {
 		userService.activateUser(userToActivate);
 	}
 	
-	@RequestMapping(value = "v1/users/{userIdToFind}", method = RequestMethod.GET)
+	@RequestMapping(value = {"v1/users/{userIdToFind}", "v2/users/{userIdToFind}"}, method = RequestMethod.GET)
 	@ResponseBody
 	public UserData findUserById(@PathVariable Integer userIdToFind) {
 		LOGGER.info("findUser");
@@ -73,7 +73,7 @@ public class UserController {
 		return foundUserData;
 	}
 	
-	@RequestMapping(value = "v1/users/{userIdToUpdate}", method = RequestMethod.PUT)
+	@RequestMapping(value = {"v1/users/{userIdToUpdate}", "v2/users/{userIdToUpdate}"}, method = RequestMethod.PUT)
 	@ResponseBody
 	public void updateUser(
 			@PathVariable Integer userIdToUpdate,
