@@ -71,7 +71,7 @@ public class ReportController {
 		List<ReportData> reportsData = new ArrayList<ReportData>();
 		List<ReportEntry> reportsEntries = this.reportService.findReportEntries(reportFilter);
 		for(ReportEntry reportEntry: reportsEntries) {
-			reportData = ReportData.fromReportEntry(reportEntry);
+			reportData = ReportEntry.fromReportData(reportEntry);
 			reportsData.add(reportData);
 		}
 		return reportsData;

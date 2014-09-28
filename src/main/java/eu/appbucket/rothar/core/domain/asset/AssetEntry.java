@@ -3,6 +3,7 @@ package eu.appbucket.rothar.core.domain.asset;
 import java.util.Date;
 
 import eu.appbucket.rothar.web.domain.asset.AssetData;
+import eu.appbucket.rothar.web.domain.asset.AssetStatus;
 
 public class AssetEntry {
 
@@ -102,6 +103,19 @@ public class AssetEntry {
 		} else if (!assetId.equals(other.assetId))
 			return false;
 		return true;
+	}
+
+	public static AssetData fromAssetEntry(AssetEntry entry) {
+		AssetData data = new AssetData();
+		data.setAssetId(entry.getAssetId());
+		data.setStatus(AssetStatus.getStatusEnumById(entry.getStatusId()));
+		data.setUserId(entry.getUserId());
+		data.setCreated(entry.getCreated());
+		data.setDescription(entry.getDescription());
+		data.setMajor(entry.getMajor());
+		data.setMinor(entry.getMinor());
+		data.setUuid(entry.getUuid());
+		return data;
 	}
 
 	public static AssetEntry fromAssetData(AssetData data) {

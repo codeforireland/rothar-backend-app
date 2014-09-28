@@ -52,6 +52,21 @@ public class ReportEntry {
 		this.created = created;
 	}
 	
+	public static ReportData fromReportData(ReportEntry data) {
+		ReportData entry = new ReportData();
+		entry.setAssetId(data.getAssetId());
+		entry.setReporterId(data.getReporterId());
+		entry.setLongitude(data.getLongitude());
+		entry.setLatitude(data.getLatitude());
+		entry.setCreated(data.getCreated());
+		entry.setUrl(
+				"https://maps.google.com/?q=" 
+				+ data.getLatitude() 
+				+ "," 
+				+ data.getLongitude());
+		return entry;
+	}
+
 	public static ReportEntry fromReportEntry(ReportData reportEntry) {
 		ReportEntry reportData = new ReportEntry();
 		reportData.setAssetId(reportEntry.getAssetId());

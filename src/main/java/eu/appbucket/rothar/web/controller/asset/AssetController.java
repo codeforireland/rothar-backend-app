@@ -84,7 +84,7 @@ public class AssetController {
 		List<AssetData> assetsData = new ArrayList<AssetData>();
 		assetEntries = assetService.findAssets(assetFilter);
 		for(AssetEntry assetEntry: assetEntries) {
-			assetData = AssetData.fromAssetEntry(assetEntry);
+			assetData = AssetEntry.fromAssetEntry(assetEntry);
 			assetsData.add(assetData);
 		}
 		return assetsData;

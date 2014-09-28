@@ -69,7 +69,7 @@ public class UserController {
 	public UserData findUserById(@PathVariable Integer userIdToFind) {
 		LOGGER.info("findUser");
 		UserEntry foundUserEntry = userService.findUserById(userIdToFind);
-		UserData foundUserData = UserData.fromUserEntry(foundUserEntry);
+		UserData foundUserData = UserEntry.fromUserEntry(foundUserEntry);
 		return foundUserData;
 	}
 	

@@ -47,6 +47,6 @@ public class UserController {
 	public UserData createUser() {
 		LOGGER.info("registerUser");
 		UserEntry createdUser = userService.createUser();
-		return UserData.fromUserEntry(createdUser);
+		return UserEntry.fromUserEntry(createdUser);
 	}
 }

@@ -90,6 +90,14 @@ public class UserEntry {
 		this.name = name;
 	}
 	
+	public static UserData fromUserEntry(UserEntry entry) {
+		UserData data = new UserData();
+		data.setEmail(entry.getEmail());
+		data.setName(entry.getName());
+		data.setUserId(entry.getUserId());
+		return data;
+	}
+
 	public static UserEntry fromUserData(UserData data) {
 		UserEntry entry = new UserEntry();
 		entry.setEmail(data.getEmail());

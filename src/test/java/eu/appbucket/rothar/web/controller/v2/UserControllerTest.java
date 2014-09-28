@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import eu.appbucket.rothar.web.domain.user.UserData;
 
-//@Ignore
+@Ignore
 public class UserControllerTest {
 	
 	private RestTemplate restClient;
