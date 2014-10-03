@@ -1,7 +1,10 @@
 package eu.appbucket.rothar.core.persistence;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import eu.appbucket.rothar.core.domain.asset.AssetEntry;
@@ -94,21 +100,32 @@ public class AssetDaoImpl implements AssetDao {
 		return false;
 	}
 	
-	public void createNewAsset(AssetEntry asset) throws AssetDaoException {
+	public AssetEntry createNewAsset(final AssetEntry asset) throws AssetDaoException {
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		final Date createdOn = new Date();
 		try {
-			jdbcTempalte.update(CREATE_ASSET_QUERY,
-				asset.getUserId(),
-				asset.getStatusId(),
-				asset.getDescription(),
-				asset.getUuid(),
-				asset.getMajor(),
-				asset.getMinor(),
-				new Date());
+			jdbcTempalte.update(new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(Connection con)
+						throws SQLException {
+					PreparedStatement preparedStatement = con.prepareStatement(CREATE_ASSET_QUERY,
+							new String[] { "asset_id" });
+					preparedStatement.setInt(1, asset.getUserId());
+					preparedStatement.setInt(2, asset.getStatusId());
+					preparedStatement.setString(3, asset.getDescription());
+					preparedStatement.setString(4, asset.getUuid());					
+					preparedStatement.setInt(5, asset.getMajor());
+					preparedStatement.setInt(6, asset.getMinor());					
+					preparedStatement.setTimestamp(7, new Timestamp(createdOn.getTime()));
+					return preparedStatement;
+				}
+			}, keyHolder);
 		} catch (DataAccessException dataAccessException) {
 			throw new AssetDaoException(
 					"Can't create asset : " + asset.getUuid() + " for user: " + asset.getUserId(), 
 					dataAccessException);
 		}
+		int assetId = keyHolder.getKey().intValue();
+		return findAssetByUserAndAssetId(asset.getUserId(), assetId);
 	}
 
 	public void updateExistingAsset(AssetEntry asset) throws AssetDaoException {

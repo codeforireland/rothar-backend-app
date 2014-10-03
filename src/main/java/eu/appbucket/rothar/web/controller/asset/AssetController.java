@@ -10,7 +10,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,13 +36,14 @@ public class AssetController {
 	
 	@RequestMapping(value = {"v1/users/{ownerId}/assets", "v2/users/{ownerId}/assets"}, method = RequestMethod.POST)
 	@ResponseBody
-	public void createOwnerAsset(
+	public AssetData createOwnerAsset(
 			@PathVariable Integer ownerId, 
 			@RequestBody AssetData assetData) {
   		LOGGER.info("createAsset");
 		AssetEntry assetEntry = AssetEntry.fromAssetData(assetData);
 		assetEntry.setUserId(ownerId);
-		assetService.createAsset(assetEntry);
+		AssetEntry newAsset = assetService.createAsset(assetEntry);
+		return AssetEntry.fromAssetEntry(newAsset);
 	}
 	
 	@RequestMapping(value = {"v1/users/{ownerId}/assets/{assetId}", "v2/users/{ownerId}/assets/{assetId}"}, 

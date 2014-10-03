@@ -21,3 +21,14 @@ curl -i -H \
 	-X POST \
 	http://api.dev.rothar.appbucket.eu/v2/users
 
+
+## ASSETS ##
+
+# create new asset for user
+
+# create the asset for user
+
+curl -i -H \
+	"Content-Type: application/json" \
+	-X POST -d '{"uuid":"39efdca2-918a-428d-8ad2-daff67ee1c8e", "minor":"1", "major":"1", "description":"red bike"}' \
+	http://localhost:8080/Rothar/v2/users/1/assets

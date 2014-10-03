@@ -36,12 +36,14 @@ public interface AssetService {
 	 * 
 	 * @param assetToBeCreated data of the asset to be created
 	 * 
+	 * @return newly create asset
+	 * 
 	 * @throws ServiceException if:
 	 * - user for which asset should be created doesn't exits
 	 * or
 	 * - there was general problem with DB
 	 */
-	void createAsset(AssetEntry assetToBeCreated) throws ServiceException;
+	AssetEntry createAsset(AssetEntry assetToBeCreated) throws ServiceException;
 	
 	/**
 	 * Updates existing asset.

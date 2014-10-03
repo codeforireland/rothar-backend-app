@@ -68,10 +68,10 @@ public class AssetServiceImpl implements AssetService {
 	}
 	
 	@Transactional
-	public void createAsset(AssetEntry assetToBeCreated) throws ServiceException {
+	public AssetEntry createAsset(AssetEntry assetToBeCreated) throws ServiceException {
 		assertAssetDoesntExistByUuid(assetToBeCreated.getUuid());
 		assertUserExist(assetToBeCreated.getUserId());
-		createNewAsset(assetToBeCreated);
+		return createNewAsset(assetToBeCreated);
 	}
 
 	private void assertUserExist(int userId) throws ServiceException {
@@ -83,13 +83,15 @@ public class AssetServiceImpl implements AssetService {
 		}
 	}
 	
-	private void createNewAsset(AssetEntry asset) throws ServiceException {
+	private AssetEntry createNewAsset(AssetEntry asset) throws ServiceException {
+		AssetEntry newAsset = new AssetEntry();
 		asset.setStatusId(AssetStatus.WITH_OWNER.getStatusId());
 		try {
-			assetDao.createNewAsset(asset);
+			newAsset = assetDao.createNewAsset(asset);
 		} catch (AssetDaoException assetDaoException) {
 			throw new ServiceException("Can't create asset with uuid: " + asset.getUuid() + " for the user with id: " + asset.getUserId(), assetDaoException);
 		}
+		return newAsset;
 	}
 	
 	@Transactional

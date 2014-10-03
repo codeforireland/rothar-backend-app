@@ -45,9 +45,11 @@ public interface AssetDao {
 	 * 
 	 * @param assetToBeCreated data for the new asset to be created
 	 * 
+	 * @return newly created asset
+	 * 
 	 * @throws AssetDaoException if there was general DB problem while persisting the new asset
 	 */
-	void createNewAsset(AssetEntry assetToBeCreated) throws AssetDaoException;
+	AssetEntry createNewAsset(AssetEntry assetToBeCreated) throws AssetDaoException;
 	
 	/**
 	 * Updates existing asset.
