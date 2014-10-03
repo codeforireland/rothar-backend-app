@@ -15,5 +15,6 @@ Notes:
 ------
 As host use:
 http://api.dev.rothar.appbucket.eu
+port 8080 and /Rothar should be ommited in all above URL.
 
 
