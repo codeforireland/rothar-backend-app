@@ -45,7 +45,7 @@ public class AssetDaoImpl implements AssetDao {
 			+ " SET status_id = ?, description = ? where asset_id = ?";
 	
 	public static final String FIND_ASSET_BY_ASSET_ID_AND_USER_ID_QUERY = "SELECT * from assets "
-			+ " WHERE user_id = ?, asset_id = ?";
+			+ " WHERE user_id = ? and asset_id = ?";
 	
 	public static final String FIND_MULTIPLE_ASSETS_QUERY = "SELECT * from assets "
 			+ " WHERE user_id = %s"
@@ -160,7 +160,7 @@ public class AssetDaoImpl implements AssetDao {
 			asset.setAssetId(rs.getInt("asset_id"));
 			asset.setCreated(rs.getTimestamp("created"));
 			asset.setDescription(rs.getString("description"));
-			asset.setStatusId(rs.getInt(rs.getInt("status_id")));
+			asset.setStatusId(rs.getInt("status_id"));
 			asset.setMajor(rs.getInt("major"));
 			asset.setMinor(rs.getInt("minor"));
 			asset.setUserId(rs.getInt("user_id"));

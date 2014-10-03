@@ -105,6 +105,7 @@ public class AssetServiceImplTest {
 			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(true));
             oneOf(assetDaoMock).createNewAsset(with(any(AssetEntry.class)));
+            
 		}});
 		test.createAsset(testAsset);
 	}

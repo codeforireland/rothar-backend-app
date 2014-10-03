@@ -17,6 +17,7 @@ import eu.appbucket.rothar.core.service.v1.UserService;
 import eu.appbucket.rothar.web.domain.asset.AssetStatus;
 
 @Service
+@Transactional(rollbackFor={Exception.class})
 public class AssetServiceImpl implements AssetService {
 
 	private AssetDao assetDao;
