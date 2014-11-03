@@ -60,6 +60,18 @@ public class AssetController {
 		assetService.updateAsset(assetEntry);
 	}
 	
+	@RequestMapping(value = {"v1/users/{ownerId}/assets/{assetId}", "v2/users/{ownerId}/assets/{assetId}"}, 
+			method = RequestMethod.GET)
+	@ResponseBody
+	public AssetData getOwnerAsset(
+			@PathVariable Integer ownerId,
+			@PathVariable Integer assetId) {
+		LOGGER.info("getOwnerAsset");		
+		AssetEntry assetEntry = assetService.findAsset(ownerId, assetId);
+		AssetData assetData = AssetEntry.fromAssetEntry(assetEntry);
+		return assetData;
+	}
+	
 	@RequestMapping(value = {"v1/users/{ownerId}/assets", "v2/users/{ownerId}/assets"}, method = RequestMethod.GET)
 	@ResponseBody
 	public List<AssetData> getOwnerAssets(
