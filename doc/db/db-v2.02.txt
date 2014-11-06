@@ -1,0 +1,17 @@
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`)
+values (20, 1,  53.3494299, -6.2600969, now()); 
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`)
+values (20, 1,  53.3494299, -6.2600969, now()); 
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`)
+values (20, 1,  53.3494299, -6.2600969, now()); 
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`)
+values (20, 1,  53.3494299, -6.2600969, now()); 
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`)
+values (20, 1,  53.3494299, -6.2600969, now()); 
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`)
+values (20, 1,  53.3494299, -6.2600969, now()); 
