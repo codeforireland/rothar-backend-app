@@ -45,6 +45,20 @@ public class AssetController {
 		AssetEntry newAsset = assetService.createAsset(assetEntry);
 		return AssetEntry.fromAssetEntry(newAsset);
 	}
+
+	@RequestMapping(value = {"v1/users/{ownerId}/assets", "v2/users/{ownerId}/assets"}, method = RequestMethod.POST)
+	@ResponseBody
+	public AssetData createSystemSpecificOwnerAsset(
+			@PathVariable Integer ownerId, 
+			@RequestBody AssetData assetData) {
+  		LOGGER.info("createAsset");
+		AssetEntry assetEntry = AssetEntry.fromAssetData(assetData);
+		assetEntry.setUserId(ownerId);
+		assetEntry.setMajor(1);
+		assetEntry.setMinor(1);
+		AssetEntry newAsset = assetService.createAsset(assetEntry);
+		return AssetEntry.fromAssetEntry(newAsset);
+	}
 	
 	@RequestMapping(value = {"v1/users/{ownerId}/assets/{assetId}", "v2/users/{ownerId}/assets/{assetId}"}, 
 			method = RequestMethod.PUT)

@@ -28,7 +28,7 @@ exec "$PRGDIR"/"$EXECUTABLE" start "$@"
 to
 exec "$PRGDIR"/"$EXECUTABLE" jpda start "$@"
  
- b) in windows: TODO
+b) in windows: TODO
  
 4) Set email credentials
 
@@ -42,3 +42,9 @@ b) in windows: TODO
 Main application URL
 a) in linux (or windows cygwin) for tomcat 7 - go to conf folder and add at the end of catalina.properties content:
 APP_URL=http://localhost:8080/Rothar
+
+5) Set iBeacon parameters:
+a) iBeacon UUID
+IBEACON_UUID=372295a7ca9-06a8-47a2-95f4-72e4f7206a41
+b) iBeacon Major ID (based on ISO 3166-1 - ireland = 372)
+IBEACON_MAJOR_ID=372

@@ -47,11 +47,18 @@ public class AssetServiceImpl implements AssetService {
 
 	public boolean isAssetNotExisting(AssetEntry assetToCheckForExistence) throws ServiceException {
 		boolean assetDoesntExists = true;
-		String uuid = assetToCheckForExistence.getUuid();
 		try {
-			assetDoesntExists = !assetDao.isAssetExisting(uuid);
+			assetDoesntExists = !assetDao.isAssetExisting(
+					assetToCheckForExistence.getUuid(), 
+					assetToCheckForExistence.getMajor(), 
+					assetToCheckForExistence.getMinor());
 		} catch (AssetDaoException assetDaoException) {
-			throw new ServiceException("Problem checking existence of the asset: " + uuid, assetDaoException);
+			throw new ServiceException(
+					"Problem checking existence of the asset with"
+					+ " uuid: " + assetToCheckForExistence.getUuid()
+					+ ", major id: " + assetToCheckForExistence.getMajor()
+					+ ", minor id: " + assetToCheckForExistence.getMinor()
+					, assetDaoException);
 		}
 		return assetDoesntExists;
 	}
@@ -70,7 +77,7 @@ public class AssetServiceImpl implements AssetService {
 	
 	@Transactional
 	public AssetEntry createAsset(AssetEntry assetToBeCreated) throws ServiceException {
-		assertAssetDoesntExistByUuid(assetToBeCreated.getUuid());
+		assertAssetDoesntExist(assetToBeCreated);
 		assertUserExist(assetToBeCreated.getUserId());
 		return createNewAsset(assetToBeCreated);
 	}
@@ -103,12 +110,14 @@ public class AssetServiceImpl implements AssetService {
 		updateExistingAsset(assetToBeUpdates);
 	}
 	
-	private void assertAssetDoesntExistByUuid(String uuid) throws ServiceException {
-		AssetEntry assetToCheckForExistence = new AssetEntry();
-		assetToCheckForExistence.setUuid(uuid);
+	private void assertAssetDoesntExist(AssetEntry assetToCheckForExistence) throws ServiceException {		
 		boolean assetExists = isAssetNotExisting(assetToCheckForExistence);
 		if(!assetExists) {
-			throw new ServiceException("Asset with uuid: " + uuid + " already exists.");
+			throw new ServiceException("Asset with "
+					+ "uuid: " + assetToCheckForExistence.getUuid()
+					+ ", major id: " + assetToCheckForExistence.getMajor()
+					+ ", minor id: " + assetToCheckForExistence.getMinor()
+					+ " already exists.");
 		}
 	}
 	
@@ -160,5 +169,15 @@ public class AssetServiceImpl implements AssetService {
 			throw new ServiceException("Can't find find asset for user : " + filter.getUserId());
 		}
 		return assets;
+	}
+	
+	public AssetEntry createSystemSpecificAsset(AssetEntry assetToBeCreated)
+			throws ServiceException {
+		String beaconUUID = (String) System.getProperty("IBEACON_UUID");
+		assetToBeCreated.setUuid(beaconUUID);
+		int beaconMajorId = Integer.valueOf(System.getProperty("IBEACON_UUID"));
+		assetToBeCreated.setMajor(beaconMajorId);
+		assertUserExist(assetToBeCreated.getUserId());
+		return createNewAsset(assetToBeCreated);		
 	}
 }

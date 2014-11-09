@@ -31,8 +31,8 @@ public class AssetDaoImpl implements AssetDao {
 	public static final String IS_ASSET_EXISTING_BY_ASSET_ID_QUERY = "SELECT count(*) from assets "
 			+ " WHERE asset_id = ?";
 	
-	public static final String IS_ASSET_EXISTING_BY_ASSET_UUID_QUERY = "SELECT count(*) from assets "
-			+ " WHERE uuid = ?";
+	public static final String IS_ASSET_EXISTING_BY_ASSET_BEACON_ID_QUERY = "SELECT count(*) from assets "
+			+ " WHERE uuid = ? and major = ? and minor = ?";
 	
 	public static final String IS_ASSET_OWNED_BY_USER_QUERY = "SELECT count(*) from assets "
 			+ " WHERE asset_id = ? AND user_id = ?";
@@ -40,6 +40,10 @@ public class AssetDaoImpl implements AssetDao {
 	public static final String CREATE_ASSET_QUERY = "INSERT INTO assets "
 			+ "(user_id, status_id, description, uuid, major, minor, created) "
 			+ "values (?, ?, ?, ?, ?, ?, ?)";
+	
+	public static final String CREATE_ASSET_WITH_NEXT_MINOR_ID_QUERY = "INSERT INTO assets "
+			+ "(user_id, status_id, description, uuid, major, created) "
+			+ "values (?, ?, ?, ?, ?, ?)";
 	
 	public static final String UPDATE_ASSET_QUERY = "UPDATE assets "
 			+ " SET status_id = ?, description = ? where asset_id = ?";
@@ -70,10 +74,10 @@ public class AssetDaoImpl implements AssetDao {
 		}
 		return false;
 	}
-
-	public boolean isAssetExisting(String uuid) throws AssetDaoException {
+	
+	public boolean isAssetExisting(String uuid, int majorId, int minorId) throws AssetDaoException {
 		try {
-			int count = jdbcTempalte.queryForInt(IS_ASSET_EXISTING_BY_ASSET_UUID_QUERY, uuid);
+			int count = jdbcTempalte.queryForInt(IS_ASSET_EXISTING_BY_ASSET_BEACON_ID_QUERY, uuid, majorId, minorId);
 			if(count > 0) {
 				return true;
 			}
@@ -114,7 +118,7 @@ public class AssetDaoImpl implements AssetDao {
 					preparedStatement.setString(3, asset.getDescription());
 					preparedStatement.setString(4, asset.getUuid());					
 					preparedStatement.setInt(5, asset.getMajor());
-					preparedStatement.setInt(6, asset.getMinor());					
+					preparedStatement.setInt(6, asset.getMinor());
 					preparedStatement.setTimestamp(7, new Timestamp(createdOn.getTime()));
 					return preparedStatement;
 				}
@@ -127,7 +131,34 @@ public class AssetDaoImpl implements AssetDao {
 		int assetId = keyHolder.getKey().intValue();
 		return findAssetByUserAndAssetId(asset.getUserId(), assetId);
 	}
-
+	
+	public AssetEntry createNewAssetWithNextMinorId(final AssetEntry asset) throws AssetDaoException {
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		final Date createdOn = new Date();
+		try {
+			jdbcTempalte.update(new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(Connection con)
+						throws SQLException {
+					PreparedStatement preparedStatement = con.prepareStatement(CREATE_ASSET_WITH_NEXT_MINOR_ID_QUERY,
+							new String[] { "asset_id" });
+					preparedStatement.setInt(1, asset.getUserId());
+					preparedStatement.setInt(2, asset.getStatusId());
+					preparedStatement.setString(3, asset.getDescription());
+					preparedStatement.setString(4, asset.getUuid());					
+					preparedStatement.setInt(5, asset.getMajor());
+					preparedStatement.setTimestamp(6, new Timestamp(createdOn.getTime()));
+					return preparedStatement;
+				}
+			}, keyHolder);
+		} catch (DataAccessException dataAccessException) {
+			throw new AssetDaoException(
+					"Can't create asset : " + asset.getUuid() + " for user: " + asset.getUserId(), 
+					dataAccessException);
+		}
+		int assetId = keyHolder.getKey().intValue();
+		return findAssetByUserAndAssetId(asset.getUserId(), assetId);
+	}
+	
 	public void updateExistingAsset(AssetEntry asset) throws AssetDaoException {
 		try {
 			jdbcTempalte.update(UPDATE_ASSET_QUERY,

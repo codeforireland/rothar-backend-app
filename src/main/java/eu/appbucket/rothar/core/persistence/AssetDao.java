@@ -20,14 +20,17 @@ public interface AssetDao {
 	boolean isAssetExisting(int assetId) throws AssetDaoException;
 
 	/**
-	 * Checks if asset exists base on asset uuid.
+	 * Checks if asset exists based on asset uuid, major id and minor id.
 	 * 
-	 * @param uuid unique id of the asset to check
+	 * @param uuid UUID of the asset to check
+	 * @param majorId MAJOR_ID of the asset to check
+	 * @param minorId MINOR_ID of the asset to check
+	 * 
 	 * @return TRUE if asset exists, FALSE if not
 	 * 
 	 * @throws AssetDaoException if there was general DB problem while checking the existence of asset
 	 */
-	boolean isAssetExisting(String uuid) throws AssetDaoException;
+	boolean isAssetExisting(String uuid, int majorId, int minorId) throws AssetDaoException;
 	
 	/**
 	 * Checks if asset is owned by user.

@@ -46,6 +46,23 @@ public interface AssetService {
 	AssetEntry createAsset(AssetEntry assetToBeCreated) throws ServiceException;
 	
 	/**
+	 * Creates new system specific asset for the user.
+	 * 
+	 * This asset will have UUID which is set for this application, major id which 
+	 * is country specific (based on ISO 3166-1) and next available minor id. 
+	 * 
+	 * @param assetToBeCreated data of the asset to be created
+	 * 
+	 * @return newly create asset
+	 * 
+	 * @throws ServiceException if:
+	 * - user for which asset should be created doesn't exits
+	 * or
+	 * - there was general problem with DB
+	 */
+	AssetEntry createSystemSpecificAsset(AssetEntry assetToBeCreated) throws ServiceException;
+	
+	/**
 	 * Updates existing asset.
 	 * 
 	 * @param assetToBeUpdates data of the asset to be updated, only non-identification data can be updated like description, status etc.
