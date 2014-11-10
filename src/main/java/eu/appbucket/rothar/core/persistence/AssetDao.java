@@ -54,6 +54,18 @@ public interface AssetDao {
 	 */
 	AssetEntry createNewAsset(AssetEntry assetToBeCreated) throws AssetDaoException;
 	
+	
+	/**
+	 * Creates new asset with next available minor id.
+	 * 
+	 * @param assetToBeCreated data for the new asset to be created
+	 * 
+	 * @return newly created asset with next available id.
+	 * 
+	 * @throws AssetDaoException if there was general DB problem while persisting the new asset
+	 */
+	AssetEntry createNewAssetWithNextMinorId(AssetEntry assetToBeCreated) throws AssetDaoException;
+	
 	/**
 	 * Updates existing asset.
 	 * 

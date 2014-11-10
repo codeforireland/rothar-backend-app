@@ -1,0 +1,16 @@
+truncate assets;
+
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (10, 1, '372295A7-CA90-6A84-7A29-5F472E4F7206', 372, 1, 'Adam bike 1', 1, now());
+
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (20, 2, '372295A7-CA90-6A84-7A29-5F472E4F7206', 372, 2, 'Philip bike 1', 1, now());
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (21, 2, '372295A7-CA90-6A84-7A29-5F472E4F7206', 372, 3, 'Philip bike 2', 1, now());
+
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (30, 3, '372295A7-CA90-6A84-7A29-5F472E4F7206', 372, 4, 'Mark bike 1', 1, now());
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (31, 3, '372295A7-CA90-6A84-7A29-5F472E4F7206', 372, 5, 'Mark bike 2', 1, now());
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (32, 3, '372295A7-CA90-6A84-7A29-5F472E4F7206', 372, 6, 'Mark bike 3', 1, now());

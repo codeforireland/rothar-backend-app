@@ -45,6 +45,6 @@ APP_URL=http://localhost:8080/Rothar
 
 5) Set iBeacon parameters:
 a) iBeacon UUID
-IBEACON_UUID=372295a7ca9-06a8-47a2-95f4-72e4f7206a41
+IBEACON_UUID=372295A7-CA90-6A84-7A29-5F472E4F7206
 b) iBeacon Major ID (based on ISO 3166-1 - ireland = 372)
 IBEACON_MAJOR_ID=372

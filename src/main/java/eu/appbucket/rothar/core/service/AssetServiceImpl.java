@@ -102,6 +102,17 @@ public class AssetServiceImpl implements AssetService {
 		return newAsset;
 	}
 	
+	private AssetEntry createNewAssetWithNextMinor(AssetEntry asset) throws ServiceException {
+		AssetEntry newAsset = new AssetEntry();
+		asset.setStatusId(AssetStatus.WITH_OWNER.getStatusId());
+		try {
+			newAsset = assetDao.createNewAssetWithNextMinorId(asset);
+		} catch (AssetDaoException assetDaoException) {
+			throw new ServiceException("Can't create asset with uuid: " + asset.getUuid() + " for the user with id: " + asset.getUserId(), assetDaoException);
+		}
+		return newAsset;
+	}
+	
 	@Transactional
 	public void updateAsset(AssetEntry assetToBeUpdates) {
 		assertAssetExistByAssetId(assetToBeUpdates.getAssetId());
@@ -178,6 +189,6 @@ public class AssetServiceImpl implements AssetService {
 		int beaconMajorId = Integer.valueOf(System.getProperty("IBEACON_UUID"));
 		assetToBeCreated.setMajor(beaconMajorId);
 		assertUserExist(assetToBeCreated.getUserId());
-		return createNewAsset(assetToBeCreated);		
+		return createNewAssetWithNextMinor(assetToBeCreated);		
 	}
 }
