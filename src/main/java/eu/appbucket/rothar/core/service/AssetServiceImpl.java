@@ -184,11 +184,16 @@ public class AssetServiceImpl implements AssetService {
 	
 	public AssetEntry createSystemSpecificAsset(AssetEntry assetToBeCreated)
 			throws ServiceException {
-		String beaconUUID = (String) System.getProperty("IBEACON_UUID");
-		assetToBeCreated.setUuid(beaconUUID);
-		int beaconMajorId = Integer.valueOf(System.getProperty("IBEACON_UUID"));
-		assetToBeCreated.setMajor(beaconMajorId);
+		assetToBeCreated = applySystemSettings(assetToBeCreated);
 		assertUserExist(assetToBeCreated.getUserId());
 		return createNewAssetWithNextMinor(assetToBeCreated);		
+	}
+	
+	private AssetEntry applySystemSettings(AssetEntry assetToBeSetup) {
+		String beaconUUID = (String) System.getProperty("IBEACON_UUID");
+		assetToBeSetup.setUuid(beaconUUID);
+		int beaconMajorId = Integer.valueOf(System.getProperty("IBEACON_MAJOR_ID"));
+		assetToBeSetup.setMajor(beaconMajorId);
+		return assetToBeSetup;
 	}
 }

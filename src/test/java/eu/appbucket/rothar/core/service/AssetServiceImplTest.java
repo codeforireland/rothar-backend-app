@@ -37,6 +37,8 @@ public class AssetServiceImplTest {
 		testAsset.setAssetId(1);
 		testAsset.setUserId(1);
 		testAsset.setUuid("2c1b80da-a69b-453b-9d06-94e499e416f1");
+		testAsset.setMajor(372);
+		testAsset.setMinor(1);
 	}
 	
 	@Test
@@ -100,7 +102,7 @@ public class AssetServiceImplTest {
 	@Test
 	public void Test_createAsset_When_assetOwnerExists_Then_createNewAsset() {
 		context.checking(new Expectations() {{
-			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)));
+			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)), with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(false));
 			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(true));
@@ -113,7 +115,7 @@ public class AssetServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_createAsset_When_assetOwnerDoesntExists_Then_throwException() {
 		context.checking(new Expectations() {{
-			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)));
+			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)), with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(false));
 			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(false));
@@ -124,7 +126,7 @@ public class AssetServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_createAsset_When_assetAlreadyExists_Then_throwException() {
 		context.checking(new Expectations() {{
-			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)));
+			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)), with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(true));
 		}});
 		test.createAsset(testAsset);
@@ -133,7 +135,7 @@ public class AssetServiceImplTest {
 	@Test(expected=ServiceException.class)
 	public void Test_createAsset_When_assetOwnerExists_but_exceptionIsThrowDuringCreatingNewAsset_Then_throwException() {
 		context.checking(new Expectations() {{
-			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)));
+			oneOf(assetDaoMock).isAssetExisting(with(any(String.class)), with(any(Integer.class)), with(any(Integer.class)));
 			will(returnValue(false));
 			oneOf(userServiceMock).isUserExistingById(with(any(UserEntry.class)));
 			will(returnValue(true));

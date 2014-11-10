@@ -42,8 +42,8 @@ public class AssetDaoImpl implements AssetDao {
 			+ "values (?, ?, ?, ?, ?, ?, ?)";
 	
 	public static final String CREATE_ASSET_WITH_NEXT_MINOR_ID_QUERY = "INSERT INTO assets "
-			+ "(user_id, status_id, description, uuid, major, created) "
-			+ "values (?, ?, ?, ?, (select (max(minor) + 1) from assets x), ?)";
+			+ "(user_id, status_id, description, uuid, major, minor, created) "
+			+ "values (?, ?, ?, ?, ?, (select (max(minor) + 1) from assets x), ?)";
 	
 	public static final String UPDATE_ASSET_QUERY = "UPDATE assets "
 			+ " SET status_id = ?, description = ? where asset_id = ?";

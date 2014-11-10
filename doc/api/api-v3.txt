@@ -1,0 +1,15 @@
+
+## In this version of api:
+## - basic http auth is turned off
+## - almost all URLs have this same format (obviously URL contains ../v3 instead of ../v2 or ../v1)
+## - URLs which are different in this version are listed bellow
+
+
+## ASSETS ##
+
+# create the system specific asset for user
+
+curl -i -H \
+	"Content-Type: application/json" \
+	-X POST -d '{"description":"red bike"}' \
+	http://localhost:8080/Rothar/v3/users/1/assets

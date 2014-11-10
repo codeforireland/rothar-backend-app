@@ -23,9 +23,6 @@ curl -i -H \
 
 
 ## ASSETS ##
-
-# create new asset for user
-
 # create the asset for user
 
 curl -i -H \
