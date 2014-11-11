@@ -34,7 +34,7 @@ public class AssetServiceImpl implements AssetService {
 		this.userService = userService;
 	}
 
-	public boolean isAssetExisting(AssetEntry assetToCheckForExistence) throws ServiceException {
+	public boolean isAssetExisting(AssetEntry assetToCheckForExistence) {
 		boolean assetExists = false;
 		int assetId = assetToCheckForExistence.getAssetId();
 		try {
@@ -45,7 +45,7 @@ public class AssetServiceImpl implements AssetService {
 		return assetExists;
 	}
 
-	public boolean isAssetNotExisting(AssetEntry assetToCheckForExistence) throws ServiceException {
+	public boolean isAssetNotExisting(AssetEntry assetToCheckForExistence) {
 		boolean assetDoesntExists = true;
 		try {
 			assetDoesntExists = !assetDao.isAssetExisting(
@@ -63,7 +63,7 @@ public class AssetServiceImpl implements AssetService {
 		return assetDoesntExists;
 	}
 	
-	public boolean isAssetOwnedByUser(AssetEntry assetToCheckForOwnership) throws ServiceException {
+	public boolean isAssetOwnedByUser(AssetEntry assetToCheckForOwnership) {
 		boolean assetOwnedByTheUser = false;
 		int assetId = assetToCheckForOwnership.getAssetId();
 		int userId = assetToCheckForOwnership.getUserId();
@@ -76,13 +76,13 @@ public class AssetServiceImpl implements AssetService {
 	}
 	
 	@Transactional
-	public AssetEntry createAsset(AssetEntry assetToBeCreated) throws ServiceException {
+	public AssetEntry createAsset(AssetEntry assetToBeCreated) {
 		assertAssetDoesntExist(assetToBeCreated);
 		assertUserExist(assetToBeCreated.getUserId());
 		return createNewAsset(assetToBeCreated);
 	}
 
-	private void assertUserExist(int userId) throws ServiceException {
+	private void assertUserExist(int userId) {
 		UserEntry userToCheckForExistence = new UserEntry();
 		userToCheckForExistence.setUserId(userId);
 		boolean userExists = userService.isUserExistingById(userToCheckForExistence);
@@ -91,7 +91,7 @@ public class AssetServiceImpl implements AssetService {
 		}
 	}
 	
-	private AssetEntry createNewAsset(AssetEntry asset) throws ServiceException {
+	private AssetEntry createNewAsset(AssetEntry asset) {
 		AssetEntry newAsset = new AssetEntry();
 		asset.setStatusId(AssetStatus.WITH_OWNER.getStatusId());
 		try {
@@ -102,7 +102,7 @@ public class AssetServiceImpl implements AssetService {
 		return newAsset;
 	}
 	
-	private AssetEntry createNewAssetWithNextMinor(AssetEntry asset) throws ServiceException {
+	private AssetEntry createNewAssetWithNextMinor(AssetEntry asset) {
 		AssetEntry newAsset = new AssetEntry();
 		asset.setStatusId(AssetStatus.WITH_OWNER.getStatusId());
 		try {
@@ -121,7 +121,7 @@ public class AssetServiceImpl implements AssetService {
 		updateExistingAsset(assetToBeUpdates);
 	}
 	
-	private void assertAssetDoesntExist(AssetEntry assetToCheckForExistence) throws ServiceException {		
+	private void assertAssetDoesntExist(AssetEntry assetToCheckForExistence) {		
 		boolean assetExists = isAssetNotExisting(assetToCheckForExistence);
 		if(!assetExists) {
 			throw new ServiceException("Asset with "
@@ -132,7 +132,7 @@ public class AssetServiceImpl implements AssetService {
 		}
 	}
 	
-	private void assertAssetExistByAssetId(Integer assetId) throws ServiceException {
+	private void assertAssetExistByAssetId(Integer assetId) {
 		AssetEntry assetToCheckForExistence = new AssetEntry();
 		assetToCheckForExistence.setAssetId(assetId);
 		boolean assetExists = isAssetExisting(assetToCheckForExistence);
@@ -141,7 +141,7 @@ public class AssetServiceImpl implements AssetService {
 		}
 	}
 	
-	private void assertAssetIsOwnerByTheUser(Integer assetId, Integer userId) throws ServiceException {
+	private void assertAssetIsOwnerByTheUser(Integer assetId, Integer userId) {
 		AssetEntry assetToCheckForOwnership = new AssetEntry();
 		assetToCheckForOwnership.setAssetId(assetId);
 		assetToCheckForOwnership.setUserId(userId);
@@ -151,7 +151,7 @@ public class AssetServiceImpl implements AssetService {
 		}
 	}
 	
-	private void updateExistingAsset(AssetEntry updatedAsset) throws ServiceException {
+	private void updateExistingAsset(AssetEntry updatedAsset) {
 		try {
 			assetDao.updateExistingAsset(updatedAsset);	
 		} catch (AssetDaoException assetDaoException) {
@@ -159,7 +159,7 @@ public class AssetServiceImpl implements AssetService {
 		}
 	}
 
-	public AssetEntry findAsset(Integer userId, Integer assetId) throws ServiceException {
+	public AssetEntry findAsset(Integer userId, Integer assetId) {
 		assertAssetExistByAssetId(assetId);
 		assertUserExist(userId);
 		assertAssetIsOwnerByTheUser(assetId, userId);
@@ -172,18 +172,18 @@ public class AssetServiceImpl implements AssetService {
 		return foundAsset;
 	}
 	
-	public List<AssetEntry> findAssets(AssetFilter filter) {
+	public List<AssetEntry> findUserAssets(AssetFilter filter) {
 		List<AssetEntry> assets = null;
 		try {
-			assets = assetDao.findAssets(filter);
+			assets = assetDao.findUserAssets(filter);
 		} catch (AssetDaoException e) {
-			throw new ServiceException("Can't find find asset for user : " + filter.getUserId());
+			throw new ServiceException("Can't find assets for user : " + filter.getUserId());
 		}
 		return assets;
 	}
 	
 	public AssetEntry createSystemSpecificAsset(AssetEntry assetToBeCreated)
-			throws ServiceException {
+			{
 		assetToBeCreated = applySystemSettings(assetToBeCreated);
 		assertUserExist(assetToBeCreated.getUserId());
 		return createNewAssetWithNextMinor(assetToBeCreated);		
@@ -195,5 +195,15 @@ public class AssetServiceImpl implements AssetService {
 		int beaconMajorId = Integer.valueOf(System.getProperty("IBEACON_MAJOR_ID"));
 		assetToBeSetup.setMajor(beaconMajorId);
 		return assetToBeSetup;
+	}
+	
+	public List<AssetEntry> findAssets(AssetFilter filter) {
+		List<AssetEntry> assets = null;
+		try {
+			assets = assetDao.findAssets(filter);
+		} catch (AssetDaoException e) {
+			throw new ServiceException("Can't find assets");
+		}
+		return assets;
 	}
 }

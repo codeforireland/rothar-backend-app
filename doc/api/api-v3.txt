@@ -13,3 +13,10 @@ curl -i -H \
 	"Content-Type: application/json" \
 	-X POST -d '{"description":"red bike"}' \
 	http://localhost:8080/Rothar/v3/users/1/assets
+	
+curl -i -H \
+	"Content-Type: application/json" \
+	-X GET \ 
+	"http://localhost:8080/Rothar/v3/assets?limit=2&offset=1&status=STOLEN"
+	
+	

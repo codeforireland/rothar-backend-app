@@ -22,6 +22,7 @@ import eu.appbucket.rothar.core.domain.asset.AssetEntry;
 import eu.appbucket.rothar.core.domain.asset.AssetFilter;
 import eu.appbucket.rothar.core.service.AssetService;
 import eu.appbucket.rothar.web.domain.asset.AssetData;
+import eu.appbucket.rothar.web.domain.asset.AssetStatus;
 
 @Controller
 public class AssetController {
@@ -107,7 +108,7 @@ public class AssetController {
 		List<AssetEntry> assetEntries = null;
 		AssetData assetData = null;
 		List<AssetData> assetsData = new ArrayList<AssetData>();
-		assetEntries = assetService.findAssets(assetFilter);
+		assetEntries = assetService.findUserAssets(assetFilter);
 		for(AssetEntry assetEntry: assetEntries) {
 			assetData = AssetEntry.fromAssetEntry(assetEntry);
 			assetsData.add(assetData);
@@ -168,5 +169,43 @@ public class AssetController {
 			}
 			return inputOffset;
 		}
+		
+		public static AssetStatus resolveStatus(String inputStatus) {			
+			AssetStatus defaultStatus = AssetStatus.STOLEN;
+			if(StringUtils.isEmpty(inputStatus)) {
+				return defaultStatus;
+			}
+			AssetStatus outputStatus= AssetStatus.valueOf(inputStatus);
+			if(outputStatus == null) {
+				return defaultStatus;
+			}
+			return outputStatus;
+		}
+	}
+	
+	@RequestMapping(value = {"v3/assets"}, method = RequestMethod.GET)
+	@ResponseBody
+	public List<AssetData> getAssets(
+			@RequestParam(value = "offset", required = false) Integer offset, 
+			@RequestParam(value = "limit", required = false) Integer limit,
+			@RequestParam(value = "status", required = false) String statusName) {
+		LOGGER.info("Retrieving asset(s)");
+		offset = InputSanitizer.resolveOffset(offset);
+		limit = InputSanitizer.resolveLimit(limit);
+		AssetStatus status = InputSanitizer.resolveStatus(statusName);
+		AssetFilter assetFilter =  new AssetFilter.Builder()
+			.starFrom(offset)
+			.limitTo(limit)
+			.withStatus(status)
+			.buildFilterForAssets();
+		List<AssetEntry> assetEntries = null;
+		AssetData assetData = null;
+		List<AssetData> assetsData = new ArrayList<AssetData>();
+		assetEntries = assetService.findAssets(assetFilter);
+		for(AssetEntry assetEntry: assetEntries) {
+			assetData = AssetEntry.fromAssetEntry(assetEntry);
+			assetsData.add(assetData);
+		}
+		return assetsData;
 	}
 }

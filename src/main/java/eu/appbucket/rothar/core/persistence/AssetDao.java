@@ -94,5 +94,15 @@ public interface AssetDao {
 	 * 
 	 * @throws ServiceException if there was general DB problem with retrieving the assets
 	 */
+	List<AssetEntry> findUserAssets(AssetFilter filter) throws AssetDaoException;
+	
+	/**
+	 * Finds assets using the give filter.
+	 * 
+	 * @param filter contains multiple constraints used for finding the assets @see {@link AssetFilter}
+	 * @return list of assets matching the filter or empty list if there was no assets found
+	 * 
+	 * @throws ServiceException if there was general DB problem with retrieving the assets
+	 */
 	List<AssetEntry> findAssets(AssetFilter filter) throws AssetDaoException;
 }

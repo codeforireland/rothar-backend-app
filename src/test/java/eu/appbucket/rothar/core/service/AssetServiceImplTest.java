@@ -276,10 +276,10 @@ public class AssetServiceImplTest {
 	@Test
 	public void Test_findAssets_When_assetsFound_Then_returnAssetsList() {
 		context.checking(new Expectations() {{
-			oneOf(assetDaoMock).findAssets(with(any(AssetFilter.class)));
+			oneOf(assetDaoMock).findUserAssets(with(any(AssetFilter.class)));
 			will(returnValue(new ArrayList<AssetEntry>()));
 		}});
-		List<AssetEntry> actualResults = test.findAssets(testAssetFilter);
+		List<AssetEntry> actualResults = test.findUserAssets(testAssetFilter);
 		Assert.assertNotNull(actualResults);
 	}
 }

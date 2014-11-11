@@ -51,9 +51,13 @@ public class AssetDaoImpl implements AssetDao {
 	public static final String FIND_ASSET_BY_ASSET_ID_AND_USER_ID_QUERY = "SELECT * from assets "
 			+ " WHERE user_id = ? and asset_id = ?";
 	
-	public static final String FIND_MULTIPLE_ASSETS_QUERY = "SELECT * from assets "
+	public static final String FIND_MULTIPLE_ASSETS_OWNED_BY_USER_QUERY = "SELECT * from assets "
 			+ " WHERE user_id = %s"
 			+ " ORDER BY %s %s "
+			+ " LIMIT %d, %d";
+	
+	public static final String FIND_MULTIPLE_ASSETS_QUERY = "SELECT * from assets "
+			+ " WHERE status_id = %d"			
 			+ " LIMIT %d, %d";
 	
 	@Autowired
@@ -61,7 +65,7 @@ public class AssetDaoImpl implements AssetDao {
 		this.jdbcTempalte = jdbcTempalte;
 	}
 	
-	public boolean isAssetExisting(int assetId) throws AssetDaoException {
+	public boolean isAssetExisting(int assetId) {
 		try {
 			int count = jdbcTempalte.queryForInt(IS_ASSET_EXISTING_BY_ASSET_ID_QUERY, assetId);
 			if(count > 0) {
@@ -75,7 +79,7 @@ public class AssetDaoImpl implements AssetDao {
 		return false;
 	}
 	
-	public boolean isAssetExisting(String uuid, int majorId, int minorId) throws AssetDaoException {
+	public boolean isAssetExisting(String uuid, int majorId, int minorId) {
 		try {
 			int count = jdbcTempalte.queryForInt(IS_ASSET_EXISTING_BY_ASSET_BEACON_ID_QUERY, uuid, majorId, minorId);
 			if(count > 0) {
@@ -89,7 +93,7 @@ public class AssetDaoImpl implements AssetDao {
 		return false;
 	}
 	
-	public boolean isAssetOwnedByUser(int assetId, int userId) throws AssetDaoException {
+	public boolean isAssetOwnedByUser(int assetId, int userId) {
 		try {
 			int count = jdbcTempalte.queryForInt(IS_ASSET_OWNED_BY_USER_QUERY, assetId, userId);
 			if(count > 0) {
@@ -104,7 +108,7 @@ public class AssetDaoImpl implements AssetDao {
 		return false;
 	}
 	
-	public AssetEntry createNewAsset(final AssetEntry asset) throws AssetDaoException {
+	public AssetEntry createNewAsset(final AssetEntry asset) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		final Date createdOn = new Date();
 		try {
@@ -132,7 +136,7 @@ public class AssetDaoImpl implements AssetDao {
 		return findAssetByUserAndAssetId(asset.getUserId(), assetId);
 	}
 	
-	public AssetEntry createNewAssetWithNextMinorId(final AssetEntry asset) throws AssetDaoException {
+	public AssetEntry createNewAssetWithNextMinorId(final AssetEntry asset) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		final Date createdOn = new Date();
 		try {
@@ -159,7 +163,7 @@ public class AssetDaoImpl implements AssetDao {
 		return findAssetByUserAndAssetId(asset.getUserId(), assetId);
 	}
 	
-	public void updateExistingAsset(AssetEntry asset) throws AssetDaoException {
+	public void updateExistingAsset(AssetEntry asset) {
 		try {
 			jdbcTempalte.update(UPDATE_ASSET_QUERY,
 				asset.getStatusId(),
@@ -171,7 +175,7 @@ public class AssetDaoImpl implements AssetDao {
 		}		
 	}
 
-	public AssetEntry findAssetByUserAndAssetId(Integer userId, Integer assetId) throws AssetDaoException {
+	public AssetEntry findAssetByUserAndAssetId(Integer userId, Integer assetId) {
 		AssetEntry asset = null;
 		try {
 			asset = jdbcTempalte.queryForObject(FIND_ASSET_BY_ASSET_ID_AND_USER_ID_QUERY, 
@@ -200,8 +204,8 @@ public class AssetDaoImpl implements AssetDao {
 		}
 	}
 	
-	public List<AssetEntry> findAssets(AssetFilter filter) throws AssetDaoException {
-		String query = String.format(FIND_MULTIPLE_ASSETS_QUERY, 
+	public List<AssetEntry> findUserAssets(AssetFilter filter) {
+		String query = String.format(FIND_MULTIPLE_ASSETS_OWNED_BY_USER_QUERY, 
 				filter.getUserId(),
 				filter.getSort(), filter.getOrder(),
 				filter.getOffset(), filter.getLimit());
@@ -217,6 +221,28 @@ public class AssetDaoImpl implements AssetDao {
 					+ " offset: " + filter.getOffset()
 					+ " sort: " + filter.getSort()
 					+ " order: " + filter.getOrder()
+					, dataAccessException);
+		}
+		if(assets == null) {
+			assets = new ArrayList<AssetEntry>();
+		}
+		return assets;
+	}
+	
+	public List<AssetEntry> findAssets(AssetFilter filter) {
+		String query = String.format(FIND_MULTIPLE_ASSETS_QUERY,
+				filter.getStatus().getStatusId(),
+				filter.getOffset(), filter.getLimit());
+		List<AssetEntry> assets = null;
+		try {
+			assets = jdbcTempalte.query(query, new AssetEntryMapper());
+		} catch(EmptyResultDataAccessException emptyResultDataAccessException) {
+			assets = new ArrayList<AssetEntry>();
+		} catch (DataAccessException dataAccessException) {
+			throw new AssetDaoException("Can't find assets using filter:"
+					+ " status: " + filter.getStatus()
+					+ " limit: " + filter.getLimit()
+					+ " offset: " + filter.getOffset()					
 					, dataAccessException);
 		}
 		if(assets == null) {

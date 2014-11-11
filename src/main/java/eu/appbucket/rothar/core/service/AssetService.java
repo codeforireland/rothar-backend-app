@@ -99,7 +99,17 @@ public interface AssetService {
 	 * Finds user assets using the give filter.
 	 * 
 	 * @param filter contains multiple constraints used for finding the assets @see {@link AssetFilter}
-	 * @return list of assets owned by the user give in the filter or empty list if there was no assets found
+	 * @return list of assets owned by the user given by the filter or empty list if there was no assets found
+	 * 
+	 * @throws ServiceException if there was general DB problem with retrieving the assets
+	 */
+	List<AssetEntry> findUserAssets(AssetFilter filter) throws ServiceException;
+	
+	/**
+	 * Finds assets using the give filter.
+	 * 
+	 * @param filter contains multiple constraints used for finding the assets @see {@link AssetFilter}
+	 * @return list of assets given by the filter or empty list if there was no assets found
 	 * 
 	 * @throws ServiceException if there was general DB problem with retrieving the assets
 	 */
