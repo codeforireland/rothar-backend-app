@@ -154,7 +154,7 @@ public class AssetController {
 		public static int resolveLimit(Integer limit) {
 			int defaultLimit = 10;
 			int minLimit = 1;
-			int maxLimit = 20;
+			int maxLimit = 100;
 			if(limit == null || limit < minLimit || limit > maxLimit) {
 				return defaultLimit;
 			}
@@ -204,8 +204,16 @@ public class AssetController {
 		assetEntries = assetService.findAssets(assetFilter);
 		for(AssetEntry assetEntry: assetEntries) {
 			assetData = AssetEntry.fromAssetEntry(assetEntry);
+			assetData = anonymizeAssetDate(assetData);
 			assetsData.add(assetData);
 		}
 		return assetsData;
+	}
+	
+	private AssetData anonymizeAssetDate(AssetData dataToBeAnonymized) {		
+		dataToBeAnonymized.setUserId(null);
+		dataToBeAnonymized.setDescription(null);
+		dataToBeAnonymized.setCreated(null);
+		return dataToBeAnonymized;
 	}
 }
