@@ -7,5 +7,6 @@ import eu.appbucket.rothar.core.domain.report.ReportEntryFilter;
 
 public interface ReportService {
 	void saveReportEntry(ReportEntry reportData);
+	void saveSystemReportEntry(ReportEntry reportData);
 	List<ReportEntry> findReportEntries(ReportEntryFilter filter);
 }

@@ -48,3 +48,6 @@ a) iBeacon UUID
 IBEACON_UUID=372295A7-CA90-6A84-7A29-5F472E4F7206
 b) iBeacon Major ID (based on ISO 3166-1 - ireland = 372)
 IBEACON_MAJOR_ID=372
+
+6) Set system user id:
+USER_ID=0

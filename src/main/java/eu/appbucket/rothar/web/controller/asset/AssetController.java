@@ -55,7 +55,7 @@ public class AssetController {
   		LOGGER.info("createSystemSpecificOwnerAsset");
 		AssetEntry assetEntry = AssetEntry.fromAssetData(assetData);
 		assetEntry.setUserId(ownerId);
-		AssetEntry newAsset = assetService.createSystemSpecificAsset(assetEntry);
+		AssetEntry newAsset = assetService.createSystemAsset(assetEntry);
 		return AssetEntry.fromAssetEntry(newAsset);
 	}
 	

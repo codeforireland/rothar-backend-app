@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import eu.appbucket.rothar.core.domain.asset.AssetEntry;
 import eu.appbucket.rothar.core.domain.report.ReportEntry;
 import eu.appbucket.rothar.core.domain.report.ReportEntryFilter;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
@@ -32,11 +33,11 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	@Transactional
-	public void saveReportEntry(ReportEntry reportData) {
-		assertUserExists(reportData.getReporterId());
-		reportDao.createNewEntry(reportData);
+	public void saveReportEntry(ReportEntry report) {
+		assertUserExists(report.getReporterId());
+		reportDao.createNewEntry(report);
 	}
-
+	
 	private void assertUserExists(Integer userId) {
 		userService.findUserById(userId);
 	}
@@ -46,4 +47,14 @@ public class ReportServiceImpl implements ReportService {
 		return reportDao.findEntries(filter);
 	}
 
+	public void saveSystemReportEntry(ReportEntry report) {
+		report = applySystemSettings(report);
+		reportDao.createNewEntry(report);
+	}
+	
+	private ReportEntry applySystemSettings(ReportEntry report) {
+		int userId = Integer.valueOf(System.getProperty("USER_ID"));
+		report.setReporterId(userId);
+		return report;
+	}
 }	

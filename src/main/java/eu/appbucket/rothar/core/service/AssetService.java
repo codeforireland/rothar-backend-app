@@ -60,7 +60,7 @@ public interface AssetService {
 	 * or
 	 * - there was general problem with DB
 	 */
-	AssetEntry createSystemSpecificAsset(AssetEntry assetToBeCreated) throws ServiceException;
+	AssetEntry createSystemAsset(AssetEntry assetToBeCreated) throws ServiceException;
 	
 	/**
 	 * Updates existing asset.

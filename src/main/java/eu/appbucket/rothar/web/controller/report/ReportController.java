@@ -48,6 +48,18 @@ public class ReportController {
 		reportService.saveReportEntry(reportEntry);
 	}
 	
+	@RequestMapping(value = {"v3/assets/{assetId}/reports"}, method = RequestMethod.POST)
+	@ResponseBody
+	public void createAnonymousReportForAsset( 
+			@PathVariable Integer assetId, 
+			@RequestBody ReportData reportEntryData) {
+  		LOGGER.info("createAnonymousReportForAsset: " + assetId);
+  		ReportEntry reportEntry = ReportEntry.fromReportEntry(reportEntryData);
+		reportEntry.setCreated(new Date());
+		reportEntry.setAssetId(assetId);
+		reportService.saveSystemReportEntry(reportEntry);
+	}
+	
 	@RequestMapping(value = {"v1/users/{ownerId}/assets/{assetId}/reports", "v2/users/{ownerId}/assets/{assetId}/reports"}, method = RequestMethod.GET)
 	@ResponseBody
 	public List<ReportData> getReportsForAsset(

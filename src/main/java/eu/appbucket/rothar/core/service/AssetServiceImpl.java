@@ -182,8 +182,7 @@ public class AssetServiceImpl implements AssetService {
 		return assets;
 	}
 	
-	public AssetEntry createSystemSpecificAsset(AssetEntry assetToBeCreated)
-			{
+	public AssetEntry createSystemAsset(AssetEntry assetToBeCreated) {
 		assetToBeCreated = applySystemSettings(assetToBeCreated);
 		assertUserExist(assetToBeCreated.getUserId());
 		return createNewAssetWithNextMinor(assetToBeCreated);		
