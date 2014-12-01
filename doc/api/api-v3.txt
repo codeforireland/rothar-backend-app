@@ -25,6 +25,6 @@ curl -i -H \
 
 curl -i -H \
 	"Content-Type: application/json" \
-	-X POST -d '{"latitude":"53.271534", "longitude":"-6.315946"}' \
-	http://Rothar/v3/assets/20/reports 
+	-X POST -d '{"reporterUuid":"D56749CC-952B-4E18-90B2-57D45BE971EB", "latitude":"53.271534", "longitude":"-6.315946"}' \
+	http://localhost:8080/Rothar/v3/assets/20/reports
 	

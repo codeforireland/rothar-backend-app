@@ -11,6 +11,7 @@ public class ReportEntry {
 	private double longitude;
 	private Date created;
 	private Integer reporterId;
+	private String reporterUuid;
 	
 	public Integer getReporterId() {
 		return reporterId;
@@ -52,6 +53,14 @@ public class ReportEntry {
 		this.created = created;
 	}
 	
+	public void setReporterUuid(String reporterUuid) {
+		this.reporterUuid = reporterUuid;
+	}
+	
+	public String getReporterUuid() {
+		return reporterUuid;
+	}
+	
 	public static ReportData fromReportData(ReportEntry data) {
 		ReportData entry = new ReportData();
 		entry.setAssetId(data.getAssetId());
@@ -59,11 +68,7 @@ public class ReportEntry {
 		entry.setLongitude(data.getLongitude());
 		entry.setLatitude(data.getLatitude());
 		entry.setCreated(data.getCreated());
-		entry.setUrl(
-				"https://maps.google.com/?q=" 
-				+ data.getLatitude() 
-				+ "," 
-				+ data.getLongitude());
+		entry.setReporterUuid(data.getReporterUuid());
 		return entry;
 	}
 
@@ -74,6 +79,7 @@ public class ReportEntry {
 		reportData.setLongitude(reportEntry.getLongitude());
 		reportData.setLatitude(reportEntry.getLatitude());
 		reportData.setCreated(reportEntry.getCreated());
+		reportData.setReporterUuid(reportEntry.getReporterUuid());
 		return reportData;
 	}
 }

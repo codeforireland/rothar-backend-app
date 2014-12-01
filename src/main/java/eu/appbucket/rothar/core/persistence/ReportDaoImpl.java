@@ -18,8 +18,8 @@ public class ReportDaoImpl implements ReportDao {
 	private JdbcTemplate jdbcTempalte;
 	
 	private final static String SQL_INSERT_REPORT_ENTRY = 
-			"INSERT INTO reports(`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`) "
-			+ "VALUES (?, ?, ?, ?, ?)";
+			"INSERT INTO reports(`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`) "
+			+ "VALUES (?, ?, ?, ?, ?, ?)";
 	
 	@Autowired
 	public void setJdbcTempalte(JdbcTemplate jdbcTempalte) {
@@ -32,7 +32,8 @@ public class ReportDaoImpl implements ReportDao {
 				entry.getReporterId(),
 				entry.getLatitude(),
 				entry.getLongitude(),
-				entry.getCreated());
+				entry.getCreated(),
+				entry.getReporterUuid());
 	}
 
 	public List<ReportEntry> findEntries(ReportEntryFilter filter) {
