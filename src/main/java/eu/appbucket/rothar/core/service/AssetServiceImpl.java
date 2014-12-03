@@ -205,4 +205,14 @@ public class AssetServiceImpl implements AssetService {
 		}
 		return assets;
 	}
+	
+	public AssetEntry findSystemAssetByTagCode(String tagCode) {
+		AssetEntry asset;
+		try {
+			asset = assetDao.findAssetByTagCode(tagCode);
+		} catch (AssetDaoException e) {
+			throw new ServiceException("Can't find assets by tag code: " + tagCode);
+		}
+		return asset;
+	}
 }

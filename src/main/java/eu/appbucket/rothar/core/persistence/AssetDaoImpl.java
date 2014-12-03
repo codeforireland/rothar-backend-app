@@ -51,6 +51,9 @@ public class AssetDaoImpl implements AssetDao {
 	public static final String FIND_ASSET_BY_ASSET_ID_AND_USER_ID_QUERY = "SELECT * from assets "
 			+ " WHERE user_id = ? and asset_id = ?";
 	
+	public static final String FIND_ASSET_BY_TAG_CODE_AND_USER_ID_QUERY = "SELECT * from assets "
+			+ " WHERE user_id = ? and tag_code = ?";
+	
 	public static final String FIND_MULTIPLE_ASSETS_OWNED_BY_USER_QUERY = "SELECT * from assets "
 			+ " WHERE user_id = %s"
 			+ " ORDER BY %s %s "
@@ -249,5 +252,18 @@ public class AssetDaoImpl implements AssetDao {
 			assets = new ArrayList<AssetEntry>();
 		}
 		return assets;
+	}
+	
+	public AssetEntry findAssetByTagCode(String tagCode) throws AssetDaoException {
+		AssetEntry asset = null;
+		try {
+			asset = jdbcTempalte.queryForObject(FIND_ASSET_BY_TAG_CODE_AND_USER_ID_QUERY, 
+					new AssetEntryMapper(), tagCode);	
+		} catch(EmptyResultDataAccessException emptyResultDataAccessException) {
+			asset = new AssetEntry();
+		} catch (DataAccessException dataAccessException) {
+			throw new AssetDaoException("Can't find asset for tag code: " + tagCode, dataAccessException);
+		}
+		return asset;
 	}
 }

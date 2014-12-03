@@ -105,6 +105,15 @@ public interface AssetService {
 	 */
 	List<AssetEntry> findUserAssets(AssetFilter filter) throws ServiceException;
 	
+	
+	/**
+	 * Finds single asset matching to the given code, the asset is owned by system user.
+	 * 
+	 * @param tagCode code of the asset to be retrieved
+	 * @return asset matching the given code
+	 */
+	AssetEntry findSystemAssetByTagCode(String tagCode);
+	
 	/**
 	 * Finds assets using the give filter.
 	 * 

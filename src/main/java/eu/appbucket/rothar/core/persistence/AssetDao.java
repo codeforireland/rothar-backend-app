@@ -105,4 +105,13 @@ public interface AssetDao {
 	 * @throws ServiceException if there was general DB problem with retrieving the assets
 	 */
 	List<AssetEntry> findAssets(AssetFilter filter) throws AssetDaoException;
+	
+	
+	/**
+	 * Finds asset matching to the given code
+	 * 
+	 * @param tagCode code of the asset to be retrieved
+	 * @return asset matching the given code
+	 */
+	AssetEntry findAssetByTagCode(String tagCode) throws AssetDaoException;
 }

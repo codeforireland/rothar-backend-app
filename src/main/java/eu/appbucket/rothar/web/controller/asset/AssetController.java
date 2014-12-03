@@ -116,6 +116,13 @@ public class AssetController {
 		return assetsData;
 	}
 	
+	@RequestMapping(value = {"v4/assets/code/{tagCode}"}, method = RequestMethod.GET)
+	public AssetData getSystemAssetByTagCode(
+			@PathVariable String tagCode) {
+		AssetEntry asset = assetService.findSystemAssetByTagCode(tagCode);
+		return AssetEntry.fromAssetEntry(asset);
+	}
+	
 	private static final class InputSanitizer {	
 		private static final Map<String, String> VALID_SORT = new HashMap<String, String>();
 		private static final Set<String> VALID_ORDER = new HashSet<String>();
