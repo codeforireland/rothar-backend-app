@@ -1,0 +1,16 @@
+# only new calls will be lister
+
+
+## ASSETS ##
+
+# update system asset (owner is default system user)
+curl -i -H \
+	"Content-Type: application/json" \
+	-X PUT -d '{"description":"", "status":"STOLEN"}' \
+	http://localhost:8080/Rothar/v4/assets/33
+
+# retrieve pre-configured asset by tag code
+curl -i -H \
+	"Content-Type: application/json" \
+	-X GET \
+	"http://localhost:8080/Rothar/v4/assets/code/PMEY"

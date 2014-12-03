@@ -77,6 +77,21 @@ public interface AssetService {
 	void updateAsset(AssetEntry assetToBeUpdates) throws ServiceException;
 	
 	/**
+	 * Updates existing system asset.
+	 * 
+	 * @param assetToBeUpdates data of the asset to be updated, only non-identification data can be updated like description, status etc.
+	 * 
+	 * @throws ServiceException if:
+	 * - asset to be updated doesn't exist
+	 * or  
+	 * - asset is not owned by user
+	 * or
+	 * - there was general DB problem
+	 */
+	void updateSystemAsset(AssetEntry assetToBeUpdates) throws ServiceException;
+	
+	
+	/**
 	 * Finds user asset.
 	 * 
 	 * @param userId ID of the asset owner

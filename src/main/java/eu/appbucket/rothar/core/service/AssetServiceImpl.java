@@ -117,8 +117,16 @@ public class AssetServiceImpl implements AssetService {
 	public void updateAsset(AssetEntry assetToBeUpdates) {
 		assertAssetExistByAssetId(assetToBeUpdates.getAssetId());
 		assertUserExist(assetToBeUpdates.getUserId());
-		assertAssetIsOwnerByTheUser(assetToBeUpdates.getAssetId(), assetToBeUpdates.getUserId());
+		assertAssetIsOwnedByTheUser(assetToBeUpdates.getAssetId(), assetToBeUpdates.getUserId());
 		updateExistingAsset(assetToBeUpdates);
+	}
+	
+	@Transactional
+	public void updateSystemAsset(AssetEntry assetToBeUpdates) throws ServiceException {
+		int userId = Integer.valueOf(System.getProperty("USER_ID"));
+		assetToBeUpdates.setUserId(userId);
+		assetToBeUpdates.setDescription("");
+		this.updateAsset(assetToBeUpdates);
 	}
 	
 	private void assertAssetDoesntExist(AssetEntry assetToCheckForExistence) {		
@@ -141,7 +149,7 @@ public class AssetServiceImpl implements AssetService {
 		}
 	}
 	
-	private void assertAssetIsOwnerByTheUser(Integer assetId, Integer userId) {
+	private void assertAssetIsOwnedByTheUser(Integer assetId, Integer userId) {
 		AssetEntry assetToCheckForOwnership = new AssetEntry();
 		assetToCheckForOwnership.setAssetId(assetId);
 		assetToCheckForOwnership.setUserId(userId);
@@ -162,7 +170,7 @@ public class AssetServiceImpl implements AssetService {
 	public AssetEntry findAsset(Integer userId, Integer assetId) {
 		assertAssetExistByAssetId(assetId);
 		assertUserExist(userId);
-		assertAssetIsOwnerByTheUser(assetId, userId);
+		assertAssetIsOwnedByTheUser(assetId, userId);
 		AssetEntry foundAsset = null;
 		try {
 			foundAsset = assetDao.findAssetByUserAndAssetId(userId, assetId);	

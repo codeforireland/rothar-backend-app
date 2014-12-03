@@ -81,8 +81,10 @@ public class AssetController {
 			@PathVariable Integer assetId,
 			@RequestBody AssetData assetData) {
 		LOGGER.info("updateOwnerAsset");
-		fdsfdsfdsfds - add to service ---
-		return null;
+		AssetEntry assetEntry = AssetEntry.fromAssetData(assetData);
+		assetEntry.setAssetId(assetId);
+		assetService.updateSystemAsset(assetEntry);
+		return AssetEntry.fromAssetEntry(assetEntry);
 	}
 	
 	@RequestMapping(value = {"v1/users/{ownerId}/assets/{assetId}", "v2/users/{ownerId}/assets/{assetId}"}, 
@@ -128,6 +130,7 @@ public class AssetController {
 	}
 	
 	@RequestMapping(value = {"v4/assets/code/{tagCode}"}, method = RequestMethod.GET)
+	@ResponseBody
 	public AssetData getSystemAssetByTagCode(
 			@PathVariable String tagCode) {
 		AssetEntry asset = assetService.findSystemAssetByTagCode(tagCode);
