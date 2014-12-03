@@ -254,11 +254,11 @@ public class AssetDaoImpl implements AssetDao {
 		return assets;
 	}
 	
-	public AssetEntry findAssetByTagCode(String tagCode) throws AssetDaoException {
+	public AssetEntry findAssetByUserAndTagCode(Integer userId, String tagCode) throws AssetDaoException {
 		AssetEntry asset = null;
 		try {
 			asset = jdbcTempalte.queryForObject(FIND_ASSET_BY_TAG_CODE_AND_USER_ID_QUERY, 
-					new AssetEntryMapper(), tagCode);	
+					new AssetEntryMapper(), userId, tagCode);	
 		} catch(EmptyResultDataAccessException emptyResultDataAccessException) {
 			asset = new AssetEntry();
 		} catch (DataAccessException dataAccessException) {

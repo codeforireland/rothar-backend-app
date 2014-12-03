@@ -66,12 +66,23 @@ public class AssetController {
 			@PathVariable Integer ownerId,
 			@PathVariable Integer assetId,
 			@RequestBody AssetData assetData) {
-		LOGGER.info("updateAsset");
+		LOGGER.info("updateOwnerAsset");
 		AssetEntry assetEntry = AssetEntry.fromAssetData(assetData);
 		assetEntry.setAssetId(assetId);
 		assetEntry.setUserId(ownerId);
 		assetService.updateAsset(assetEntry);
 		return AssetEntry.fromAssetEntry(assetEntry);
+	}
+	
+	@RequestMapping(value = {"v4/assets/{assetId}"}, 
+			method = RequestMethod.PUT)
+	@ResponseBody
+	public AssetData updateSystemAsset(
+			@PathVariable Integer assetId,
+			@RequestBody AssetData assetData) {
+		LOGGER.info("updateOwnerAsset");
+		fdsfdsfdsfds - add to service ---
+		return null;
 	}
 	
 	@RequestMapping(value = {"v1/users/{ownerId}/assets/{assetId}", "v2/users/{ownerId}/assets/{assetId}"}, 

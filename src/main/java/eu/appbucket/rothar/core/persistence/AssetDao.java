@@ -111,7 +111,9 @@ public interface AssetDao {
 	 * Finds asset matching to the given code
 	 * 
 	 * @param tagCode code of the asset to be retrieved
+	 * @param userId id of the asset owner
+	 * 
 	 * @return asset matching the given code
 	 */
-	AssetEntry findAssetByTagCode(String tagCode) throws AssetDaoException;
+	AssetEntry findAssetByUserAndTagCode(Integer userId, String tagCode) throws AssetDaoException;
 }

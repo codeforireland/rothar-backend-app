@@ -207,9 +207,10 @@ public class AssetServiceImpl implements AssetService {
 	}
 	
 	public AssetEntry findSystemAssetByTagCode(String tagCode) {
-		AssetEntry asset;
+		AssetEntry asset = null;
+		int userId = Integer.valueOf(System.getProperty("USER_ID"));
 		try {
-			asset = assetDao.findAssetByTagCode(tagCode);
+			asset = assetDao.findAssetByUserAndTagCode(userId, tagCode);
 		} catch (AssetDaoException e) {
 			throw new ServiceException("Can't find assets by tag code: " + tagCode);
 		}
