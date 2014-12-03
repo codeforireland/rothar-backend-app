@@ -213,6 +213,9 @@ public class AssetServiceImpl implements AssetService {
 		} catch (AssetDaoException e) {
 			throw new ServiceException("Can't find assets by tag code: " + tagCode);
 		}
+		if(asset.getAssetId() == null) {
+			throw new ServiceException("Asset with tag code: " + tagCode + " doesn't exist.");
+		}
 		return asset;
 	}
 }

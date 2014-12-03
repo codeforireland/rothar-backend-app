@@ -111,8 +111,11 @@ public interface AssetService {
 	 * 
 	 * @param tagCode code of the asset to be retrieved
 	 * @return asset matching the given code
+	 * 
+	 * @throws ServiceException if asset with given tag code does not exist or 
+	 * there was general DB problem with retrieving the assets
 	 */
-	AssetEntry findSystemAssetByTagCode(String tagCode);
+	AssetEntry findSystemAssetByTagCode(String tagCode) throws ServiceException;
 	
 	/**
 	 * Finds assets using the give filter.
