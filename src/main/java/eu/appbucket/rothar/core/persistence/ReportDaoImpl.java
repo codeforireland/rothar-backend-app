@@ -46,7 +46,7 @@ public class ReportDaoImpl implements ReportDao {
 			.orderBy(filter.getOrder())
 			.buildQuery();
 		List<ReportEntry> reports = jdbcTempalte.query(query, new ReportMapper());
-		return reports;
+ 		return reports;
 	} 
 	
 	private static final class ReportMapper implements RowMapper<ReportEntry> {

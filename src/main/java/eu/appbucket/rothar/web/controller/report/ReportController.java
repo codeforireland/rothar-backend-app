@@ -9,7 +9,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.appbucket.rothar.core.domain.report.ReportEntry;
 import eu.appbucket.rothar.core.domain.report.ReportEntryFilter;
 import eu.appbucket.rothar.core.service.ReportService;
+import eu.appbucket.rothar.core.service.SystemService;
 import eu.appbucket.rothar.web.domain.report.ReportData;
 
 @Controller
@@ -28,10 +28,16 @@ public class ReportController {
 
 	private static final Logger LOGGER = Logger.getLogger(ReportController.class);	
 	private ReportService reportService;
+	private SystemService systemService;
 	
 	@Autowired
 	public void setReportService(ReportService reportService) {
 		this.reportService = reportService;
+	}
+	
+	@Autowired
+	public void setSystemService(SystemService systemService) {
+		this.systemService = systemService;
 	}
 	
 	@RequestMapping(value = {"v1/users/{reporterId}/assets/{assetId}/reports", "v2/users/{reporterId}/assets/{assetId}/reports"}, method = RequestMethod.POST)
@@ -60,14 +66,16 @@ public class ReportController {
 		reportService.saveSystemReportEntry(reportEntry);
 	}
 	
-	@RequestMapping(value = {"v3//assets/{assetId}/reports"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"v4/assets/{assetId}/reports"}, method = RequestMethod.GET)
+	@ResponseBody	
 	public List<ReportData> getAnonymousReportsForAsset(
 			@PathVariable Integer assetId,
 			@RequestParam(value = "offset", required = false) Integer offset, 
 			@RequestParam(value = "limit", required = false) Integer limit, 
 			@RequestParam(value = "sort", required = false) String sort, 
 			@RequestParam(value = "order", required = false) String order) {
-		return getReportsForAsset(null, assetId, offset, limit, sort, order);
+		int systemOwnerId = systemService.getSystemUserId();
+		return getReportsForAsset(systemOwnerId, assetId, offset, limit, sort, order);
 	}
 	
 	@RequestMapping(value = {"v1/users/{ownerId}/assets/{assetId}/reports", "v2/users/{ownerId}/assets/{assetId}/reports"}, method = RequestMethod.GET)

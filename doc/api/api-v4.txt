@@ -14,3 +14,13 @@ curl -i -H \
 	"Content-Type: application/json" \
 	-X GET \
 	"http://localhost:8080/Rothar/v4/assets/code/PMEY"
+	
+	
+## REPORTS ##
+
+# retrieve anynomously reports for given asset
+
+curl -i -H \
+	"Content-Type: application/json" \
+	-X GET \
+	"http://localhost:8080/Rothar/v4/assets/33/reports?limit=10&sort=created"

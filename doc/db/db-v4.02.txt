@@ -1,0 +1,75 @@
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.3494299, -6.2600969, STR_TO_DATE('2003-12-31 01:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.3494299, -6.1600969, STR_TO_DATE('2003-12-31 02:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.3494299, -6.2300969, STR_TO_DATE('2003-12-31 03:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.2494299, -6.2600969, STR_TO_DATE('2003-12-31 04:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  51.3494299, -6.2680969, STR_TO_DATE('2003-12-31 05:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  52.3494299, -6.1600969, STR_TO_DATE('2003-12-31 06:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.3894299, -6.3600969, STR_TO_DATE('2003-12-31 07:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.3494299, -6.2100969, STR_TO_DATE('2003-12-31 08:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.3494299, -6.2200969, STR_TO_DATE('2003-12-31 09:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.3474299, -6.2900969, STR_TO_DATE('2003-12-31 10:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.1494299, -6.212969, STR_TO_DATE('2003-12-31 11:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.3494299, -6.1606969, STR_TO_DATE('2003-12-31 12:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.3594299, -6.0600969, STR_TO_DATE('2003-12-31 13:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.3694299, -6.2610969, STR_TO_DATE('2003-12-31 14:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
+
+insert into `reports` (`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`)
+values ((select asset_id from assets 
+where 
+user_id = 0 and uuid = '372295A7-CA90-6A84-7A29-5F472E4F7206' and major = 372 and minor = 40), 1,  53.3294299, -6.2670969, STR_TO_DATE('2003-12-31 15:02:03', '%Y-%m-%d %k:%i:%S'), '62173aa4-c493-48d9-a289-ea27a5ff9550');
