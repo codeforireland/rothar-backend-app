@@ -60,6 +60,16 @@ public class ReportController {
 		reportService.saveSystemReportEntry(reportEntry);
 	}
 	
+	@RequestMapping(value = {"v3//assets/{assetId}/reports"}, method = RequestMethod.GET)
+	public List<ReportData> getAnonymousReportsForAsset(
+			@PathVariable Integer assetId,
+			@RequestParam(value = "offset", required = false) Integer offset, 
+			@RequestParam(value = "limit", required = false) Integer limit, 
+			@RequestParam(value = "sort", required = false) String sort, 
+			@RequestParam(value = "order", required = false) String order) {
+		return getReportsForAsset(null, assetId, offset, limit, sort, order);
+	}
+	
 	@RequestMapping(value = {"v1/users/{ownerId}/assets/{assetId}/reports", "v2/users/{ownerId}/assets/{assetId}/reports"}, method = RequestMethod.GET)
 	@ResponseBody
 	public List<ReportData> getReportsForAsset(
