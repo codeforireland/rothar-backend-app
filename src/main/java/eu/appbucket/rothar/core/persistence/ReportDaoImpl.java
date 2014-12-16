@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import eu.appbucket.rothar.core.domain.report.ReportEntry;
-import eu.appbucket.rothar.core.domain.report.ReportEntryFilter;
+import eu.appbucket.rothar.core.domain.report.ReportListFilter;
 
 @Repository
 public class ReportDaoImpl implements ReportDao {
@@ -36,7 +36,7 @@ public class ReportDaoImpl implements ReportDao {
 				entry.getReporterUuid());
 	}
 
-	public List<ReportEntry> findEntries(ReportEntryFilter filter) {
+	public List<ReportEntry> findEntries(ReportListFilter filter) {
 		String query = new ReportEntrySelectQueryBuilder()
 			.forAssetId(filter.getAssetId())
 			.forOwnerId(filter.getUserId())

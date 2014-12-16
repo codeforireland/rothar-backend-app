@@ -1,6 +1,6 @@
 package eu.appbucket.rothar.core.domain.report;
 
-public class ReportEntryFilter {
+public class ReportListFilter {
 	
 	private int offset;
 	private int limit;
@@ -9,7 +9,7 @@ public class ReportEntryFilter {
 	private Integer assetId;
 	private Integer userId;
 	
-	private ReportEntryFilter() {
+	protected ReportListFilter() {
 	}
 	
 	public int getOffset() {
@@ -100,8 +100,8 @@ public class ReportEntryFilter {
 			return this;
 		}
 		
-		public ReportEntryFilter build() {
-			ReportEntryFilter filter = new ReportEntryFilter();
+		public ReportListFilter build() {
+			ReportListFilter filter = new ReportListFilter();
 			filter.setLimit(this.limit);
 			filter.setOffset(this.offset);
 			filter.setOrder(this.order);

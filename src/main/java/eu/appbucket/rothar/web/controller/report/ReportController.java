@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.appbucket.rothar.core.domain.report.ReportEntry;
-import eu.appbucket.rothar.core.domain.report.ReportEntryFilter;
+import eu.appbucket.rothar.core.domain.report.ReportListFilter;
 import eu.appbucket.rothar.core.service.ReportService;
 import eu.appbucket.rothar.core.service.SystemService;
 import eu.appbucket.rothar.web.domain.report.ReportData;
@@ -66,6 +66,29 @@ public class ReportController {
 		reportService.saveSystemReportEntry(reportEntry);
 	}
 	
+	@RequestMapping(value = {"v4/assets/{assetId}/reports/summary"}, method = RequestMethod.GET)
+	@ResponseBody	
+	public List<ReportData> getAnonymousReportsSummaryForAsset(
+			@PathVariable Integer assetId,
+			@RequestParam(value = "offset", required = false) Integer offset, 
+			@RequestParam(value = "limit", required = false) Integer limit, 
+			@RequestParam(value = "sort", required = false) String sort, 
+			@RequestParam(value = "order", required = false) String order) {
+		int systemOwnerId = systemService.getSystemUserId();
+		ParametersSanitizer summaryParametersSanitizer = new ParametersSanitizer()
+			.addValidOrder("asc").addValidOrder("desc").addValidSort("created").addValidSort("count");
+		offset = summaryParametersSanitizer.resolveOffset(offset);
+		limit = summaryParametersSanitizer.resolveLimit(limit);
+		sort = summaryParametersSanitizer.resoleveSort(sort);
+		order = summaryParametersSanitizer.resoleveOrder(order);
+		ReportListFilter reportFilter =  new ReportListFilter.Builder()
+			.forAsset(assetId)
+			.ownerBy(systemOwnerId)
+			.fromOffset(offset).withLimit(limit)
+			.sortBy(sort).orderBy(order).build();
+		return getReportsForAsset(systemOwnerId, assetId, offset, limit, sort, order);
+	}
+	
 	@RequestMapping(value = {"v4/assets/{assetId}/reports"}, method = RequestMethod.GET)
 	@ResponseBody	
 	public List<ReportData> getAnonymousReportsForAsset(
@@ -88,11 +111,13 @@ public class ReportController {
 			@RequestParam(value = "sort", required = false) String sort, 
 			@RequestParam(value = "order", required = false) String order) {
 		LOGGER.info("getReportsForAsset: " + assetId);
-		offset = InputSanitizer.resolveOffset(offset);
-		limit = InputSanitizer.resolveLimit(limit);
-		sort = InputSanitizer.resoleveSort(sort);
-		order = InputSanitizer.resoleveOrder(order);
-		ReportEntryFilter reportFilter =  new ReportEntryFilter.Builder()
+		ParametersSanitizer reportsParametersSanitizer = new ParametersSanitizer()
+			.addValidOrder("asc").addValidOrder("desc").addValidSort("created");
+		offset = reportsParametersSanitizer.resolveOffset(offset);
+		limit = reportsParametersSanitizer.resolveLimit(limit);
+		sort = reportsParametersSanitizer.resoleveSort(sort);
+		order = reportsParametersSanitizer.resoleveOrder(order);
+		ReportListFilter reportFilter =  new ReportListFilter.Builder()
 				.forAsset(assetId)
 				.ownerBy(ownerId)
 				.fromOffset(offset).withLimit(limit)
@@ -107,39 +132,43 @@ public class ReportController {
 		return reportsData;
 	}
 	
-	private static final class InputSanitizer {	
-		private static final Set<String> VALID_SORT = new HashSet<String>();
-		private static final Set<String> VALID_ORDER = new HashSet<String>();
+	private static final class ParametersSanitizer {	
+		private Set<String> validSort = new HashSet<String>();
+		private Set<String> validOrder = new HashSet<String>();
 		
-		static {
-			VALID_SORT.add("created");
-			VALID_ORDER.add("asc");
-			VALID_ORDER.add("desc");
+		public ParametersSanitizer addValidSort(String sort) {
+			validSort.add(sort);
+			return this;
+		}
+		
+		public ParametersSanitizer addValidOrder(String order) {
+			validOrder.add(order);
+			return this;
 		}
 	
-		public static String resoleveSort(String inputSort) {
+		public String resoleveSort(String inputSort) {
 			String defaultSort = "created";
 			if(StringUtils.isEmpty(inputSort)) {
 				return defaultSort;
 			}
-			if(!VALID_SORT.contains(inputSort)) {
+			if(!validSort.contains(inputSort)) {
 				return defaultSort;
 			}
 			return inputSort;
 		}
 		
-		public static String resoleveOrder(String inputOrder) {
+		public String resoleveOrder(String inputOrder) {
 			String defaultOrder = "desc";
 			if(StringUtils.isEmpty(inputOrder)) {
 				return defaultOrder;
 			}
-			if(!VALID_ORDER.contains(inputOrder)) {
+			if(!validOrder.contains(inputOrder)) {
 				return defaultOrder;
 			}
 			return inputOrder;
 		}
 		
-		public static int resolveLimit(Integer limit) {
+		public int resolveLimit(Integer limit) {
 			int defaultLimit = 10;
 			int minLimit = 1;
 			int maxLimit = 20;
@@ -149,7 +178,7 @@ public class ReportController {
 			return limit;
 		}
 		
-		public static int resolveOffset(Integer inputOffset) {
+		public int resolveOffset(Integer inputOffset) {
 			int defaultOffset = 0;
 			int minOffset = 0;
 			if(inputOffset == null || inputOffset < minOffset) {

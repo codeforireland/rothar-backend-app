@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import eu.appbucket.rothar.core.domain.asset.AssetEntry;
 import eu.appbucket.rothar.core.domain.report.ReportEntry;
-import eu.appbucket.rothar.core.domain.report.ReportEntryFilter;
+import eu.appbucket.rothar.core.domain.report.ReportListFilter;
 import eu.appbucket.rothar.core.domain.user.UserEntry;
 import eu.appbucket.rothar.core.persistence.ReportDao;
 import eu.appbucket.rothar.core.persistence.UserDao;
@@ -42,7 +42,7 @@ public class ReportServiceImpl implements ReportService {
 		userService.findUserById(userId);
 	}
 	
-	public List<ReportEntry> findReportEntries(ReportEntryFilter filter) {
+	public List<ReportEntry> findReportEntries(ReportListFilter filter) {
 		assertUserExists(filter.getUserId());
 		return reportDao.findEntries(filter);
 	}
