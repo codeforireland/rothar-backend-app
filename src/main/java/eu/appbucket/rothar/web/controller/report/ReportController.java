@@ -66,7 +66,7 @@ public class ReportController {
 		reportService.saveSystemReportEntry(reportEntry);
 	}
 	
-	@RequestMapping(value = {"v4/assets/{assetId}/reports/summary"}, method = RequestMethod.GET)
+	/*@RequestMapping(value = {"v4/assets/{assetId}/reports/summary"}, method = RequestMethod.GET)
 	@ResponseBody	
 	public List<ReportData> getAnonymousReportsSummaryForAsset(
 			@PathVariable Integer assetId,
@@ -75,18 +75,67 @@ public class ReportController {
 			@RequestParam(value = "sort", required = false) String sort, 
 			@RequestParam(value = "order", required = false) String order) {
 		int systemOwnerId = systemService.getSystemUserId();
-		ParametersSanitizer summaryParametersSanitizer = new ParametersSanitizer()
+		ParameterSanitizer summaryParametersSanitizer = new ParameterSanitizer()
 			.addValidOrder("asc").addValidOrder("desc").addValidSort("created").addValidSort("count");
-		offset = summaryParametersSanitizer.resolveOffset(offset);
-		limit = summaryParametersSanitizer.resolveLimit(limit);
-		sort = summaryParametersSanitizer.resoleveSort(sort);
-		order = summaryParametersSanitizer.resoleveOrder(order);
+		offset = summaryParametersSanitizer.sanitizeOffset(offset);
+		limit = summaryParametersSanitizer.sanitizeLimit(limit);
+		sort = summaryParametersSanitizer.sanitizeSort(sort);
+		order = summaryParametersSanitizer.sanitizeOrder(order);
 		ReportListFilter reportFilter =  new ReportListFilter.Builder()
 			.forAsset(assetId)
 			.ownerBy(systemOwnerId)
 			.fromOffset(offset).withLimit(limit)
 			.sortBy(sort).orderBy(order).build();
 		return getReportsForAsset(systemOwnerId, assetId, offset, limit, sort, order);
+	}*/
+	
+	@RequestMapping(value = {"v4/assets/{assetId}/reports/{fromDate}/{toDate}"}, method = RequestMethod.GET)
+	@ResponseBody	
+	public List<ReportData> getAnonymousReportsForAssetInDateBoundaries(
+			@PathVariable Integer assetId,
+			@PathVariable Date fromDate,
+			@PathVariable Date toDate,
+			@RequestParam(value = "offset", required = false) Integer offset, 
+			@RequestParam(value = "limit", required = false) Integer limit, 
+			@RequestParam(value = "sort", required = false) String sort, 
+			@RequestParam(value = "order", required = false) String order) {
+		LOGGER.info("getAnonymousReportsForAssetInDateBoundaries: " + assetId);
+		int systemOwnerId = systemService.getSystemUserId();
+		ReportListFilter reportFilter = sanitizeParametersAndBuildReportFilter(systemOwnerId, assetId, offset, limit, sort, order);
+		List<ReportEntry> reportsEntries = this.reportService.findReportEntriesForDate(reportFilter, fromDate, toDate);
+		List<ReportData> reportsData = convertReportEntriesToReportDate(reportsEntries);
+		return reportsData;
+	}
+	
+	private ReportListFilter sanitizeParametersAndBuildReportFilter (
+			Integer ownerId,
+			Integer assetId,
+			Integer offset,
+			Integer limit,
+			String sort,
+			String order) {
+		ParameterSanitizer reportsParameterSanitizer = new ParameterSanitizer()
+			.addValidOrder("asc").addValidOrder("desc").addValidSort("created");
+		offset = reportsParameterSanitizer.sanitizeOffset(offset);
+		limit = reportsParameterSanitizer.sanitizeLimit(limit);
+		sort = reportsParameterSanitizer.sanitizeSort(sort);
+		order = reportsParameterSanitizer.sanitizeOrder(order);
+		ReportListFilter reportFilter =  new ReportListFilter.Builder()
+				.forAsset(assetId)
+				.ownerBy(ownerId)
+				.fromOffset(offset).withLimit(limit)
+				.sortBy(sort).orderBy(order).build();
+		return reportFilter;
+	}
+	
+	private List<ReportData> convertReportEntriesToReportDate(List<ReportEntry> reportsEntries) {
+		ReportData reportData = null;
+		List<ReportData> reportsData = new ArrayList<ReportData>();
+		for(ReportEntry reportEntry: reportsEntries) {
+			reportData = ReportEntry.fromReportData(reportEntry);
+			reportsData.add(reportData);
+		}
+		return reportsData;
 	}
 	
 	@RequestMapping(value = {"v4/assets/{assetId}/reports"}, method = RequestMethod.GET)
@@ -106,47 +155,32 @@ public class ReportController {
 	public List<ReportData> getReportsForAsset(
 			@PathVariable Integer ownerId,
 			@PathVariable Integer assetId,
-			@RequestParam(value = "offset", required = false) Integer offset, 
-			@RequestParam(value = "limit", required = false) Integer limit, 
-			@RequestParam(value = "sort", required = false) String sort, 
+			@RequestParam(value = "offset", required = false) Integer offset,
+			@RequestParam(value = "limit", required = false) Integer limit,
+			@RequestParam(value = "sort", required = false) String sort,
 			@RequestParam(value = "order", required = false) String order) {
 		LOGGER.info("getReportsForAsset: " + assetId);
-		ParametersSanitizer reportsParametersSanitizer = new ParametersSanitizer()
-			.addValidOrder("asc").addValidOrder("desc").addValidSort("created");
-		offset = reportsParametersSanitizer.resolveOffset(offset);
-		limit = reportsParametersSanitizer.resolveLimit(limit);
-		sort = reportsParametersSanitizer.resoleveSort(sort);
-		order = reportsParametersSanitizer.resoleveOrder(order);
-		ReportListFilter reportFilter =  new ReportListFilter.Builder()
-				.forAsset(assetId)
-				.ownerBy(ownerId)
-				.fromOffset(offset).withLimit(limit)
-				.sortBy(sort).orderBy(order).build();
-		ReportData reportData = null;
-		List<ReportData> reportsData = new ArrayList<ReportData>();
+		ReportListFilter reportFilter = sanitizeParametersAndBuildReportFilter(ownerId, assetId, offset, limit, sort, order);
 		List<ReportEntry> reportsEntries = this.reportService.findReportEntries(reportFilter);
-		for(ReportEntry reportEntry: reportsEntries) {
-			reportData = ReportEntry.fromReportData(reportEntry);
-			reportsData.add(reportData);
-		}
+		List<ReportData> reportsData = convertReportEntriesToReportDate(reportsEntries);
 		return reportsData;
 	}
 	
-	private static final class ParametersSanitizer {	
+	private static final class ParameterSanitizer {	
 		private Set<String> validSort = new HashSet<String>();
 		private Set<String> validOrder = new HashSet<String>();
 		
-		public ParametersSanitizer addValidSort(String sort) {
+		public ParameterSanitizer addValidSort(String sort) {
 			validSort.add(sort);
 			return this;
 		}
 		
-		public ParametersSanitizer addValidOrder(String order) {
+		public ParameterSanitizer addValidOrder(String order) {
 			validOrder.add(order);
 			return this;
 		}
 	
-		public String resoleveSort(String inputSort) {
+		public String sanitizeSort(String inputSort) {
 			String defaultSort = "created";
 			if(StringUtils.isEmpty(inputSort)) {
 				return defaultSort;
@@ -157,7 +191,7 @@ public class ReportController {
 			return inputSort;
 		}
 		
-		public String resoleveOrder(String inputOrder) {
+		public String sanitizeOrder(String inputOrder) {
 			String defaultOrder = "desc";
 			if(StringUtils.isEmpty(inputOrder)) {
 				return defaultOrder;
@@ -168,7 +202,7 @@ public class ReportController {
 			return inputOrder;
 		}
 		
-		public int resolveLimit(Integer limit) {
+		public int sanitizeLimit(Integer limit) {
 			int defaultLimit = 10;
 			int minLimit = 1;
 			int maxLimit = 20;
@@ -178,7 +212,7 @@ public class ReportController {
 			return limit;
 		}
 		
-		public int resolveOffset(Integer inputOffset) {
+		public int sanitizeOffset(Integer inputOffset) {
 			int defaultOffset = 0;
 			int minOffset = 0;
 			if(inputOffset == null || inputOffset < minOffset) {

@@ -2,6 +2,8 @@ package eu.appbucket.rothar.core.persistence;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import eu.appbucket.rothar.core.domain.report.ReportEntry;
 import eu.appbucket.rothar.core.domain.report.ReportListFilter;
+import eu.appbucket.rothar.core.persistence.exception.ReportDaoException;
 
 @Repository
 public class ReportDaoImpl implements ReportDao {
@@ -20,6 +23,29 @@ public class ReportDaoImpl implements ReportDao {
 	private final static String SQL_INSERT_REPORT_ENTRY = 
 			"INSERT INTO reports(`asset_id`, `reporter_id`, `latitude`, `longitude`, `created`, `reporter_uuid`) "
 			+ "VALUES (?, ?, ?, ?, ?, ?)";
+	
+	private final static String SQL_SELECT_REPORT_ENTRIES =
+			"SELECT * FROM reports, assets "
+			+ "WHERE "
+			+ "reports.asset_id = ? "
+			+ "AND assets.user_id = ? "
+			+ "AND assets.asset_id = reports.asset_id "
+			+ "ORDER BY reports.%s %s "
+			+ "LIMIT ? "
+			+ "OFFSET ?";
+	
+	private final static String SQL_SELECT_REPORT_ENTRIES_WITH_DATE_BOUNDARIES =
+			"SELECT * FROM reports, assets "
+			+ "WHERE "
+			+ "reports.asset_id = ? "
+			+ "AND assets.user_id = ? "
+			+ "AND assets.asset_id = reports.asset_id "
+			+ "AND reports.created >= ? "
+			+ "AND reports.created <= ? "
+			+ "AND assets.asset_id = reports.asset_id "
+			+ "ORDER BY reports.%s %s "
+			+ "LIMIT ? "
+			+ "OFFSET ?";
 	
 	@Autowired
 	public void setJdbcTempalte(JdbcTemplate jdbcTempalte) {
@@ -36,16 +62,12 @@ public class ReportDaoImpl implements ReportDao {
 				entry.getReporterUuid());
 	}
 
-	public List<ReportEntry> findEntries(ReportListFilter filter) {
-		String query = new ReportEntrySelectQueryBuilder()
-			.forAssetId(filter.getAssetId())
-			.forOwnerId(filter.getUserId())
-			.startingFrom(filter.getOffset())
-			.withTotal(filter.getLimit())
-			.sortBy(filter.getSort())
-			.orderBy(filter.getOrder())
-			.buildQuery();
-		List<ReportEntry> reports = jdbcTempalte.query(query, new ReportMapper());
+	public List<ReportEntry> findEntriesByFilter(ReportListFilter filter) {
+		String query = String.format(SQL_SELECT_REPORT_ENTRIES, filter.getSort(), filter.getOrder());
+		List<ReportEntry> reports = jdbcTempalte.query(
+				query, 
+				new Object[]{filter.getAssetId(), filter.getUserId(), filter.getOffset(), filter.getLimit()},
+				new ReportMapper());
  		return reports;
 	} 
 	
@@ -60,62 +82,15 @@ public class ReportDaoImpl implements ReportDao {
 		}
 	}
 	
-	private static final class ReportEntrySelectQueryBuilder {
-		
-		private Integer assetId;
-		private Integer ownerId;
-		private int offset;
-		private int limit;
-		private String order;
-		private String sort;
-		
-		private final static String SQL_SELECT_REPORT_ENTRIES =
-				"SELECT * FROM reports, assets "
-				+ "WHERE "
-				+ "reports.asset_id = %d "
-				+ "AND assets.user_id = %d "
-				+ "AND assets.asset_id = reports.asset_id "
-				+ "ORDER BY reports.%s %s "
-				+ "LIMIT %d "
-				+ "OFFSET %d";
-		
-		public ReportEntrySelectQueryBuilder forAssetId(Integer assetId) {
-			this.assetId = assetId;
-			return this;
-		}
-		
-		public ReportEntrySelectQueryBuilder forOwnerId(Integer ownerId) {
-			this.ownerId = ownerId;
-			return this;
-		}
-		
-		public ReportEntrySelectQueryBuilder sortBy(String sort) {
-			this.sort = sort;
-			return this;
-		}
-		
-		public ReportEntrySelectQueryBuilder orderBy(String order) {
-			this.order = order;
-			return this;
-		}
-		
-		public ReportEntrySelectQueryBuilder startingFrom(int offset) {
-			this.offset= offset;
-			return this;
-		}
-		
-		public ReportEntrySelectQueryBuilder withTotal(int limit) {
-			this.limit = limit;
-			return this;
-		}
-		
-		public String buildQuery() {
-			return String.format(
-					SQL_SELECT_REPORT_ENTRIES, 
-					this.assetId,
-					this.ownerId,
-					this.sort, this.order,
-					this.limit, this.offset);
-		}
+	public List<ReportEntry> findEntriesByFilterAndDate(ReportListFilter filter, Date from, Date to)
+			throws ReportDaoException {
+		String query = String.format(SQL_SELECT_REPORT_ENTRIES_WITH_DATE_BOUNDARIES, filter.getSort(), filter.getOrder());
+		List<ReportEntry> reports = jdbcTempalte.query(
+				query, 
+				new Object[]{filter.getAssetId(), filter.getUserId(), 
+						from, to,
+						filter.getOffset(), filter.getLimit()},
+				new ReportMapper());
+ 		return reports;
 	}
 }

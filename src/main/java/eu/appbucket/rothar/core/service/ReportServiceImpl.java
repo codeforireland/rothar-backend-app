@@ -1,5 +1,6 @@
 package eu.appbucket.rothar.core.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,16 @@ public class ReportServiceImpl implements ReportService {
 
 	private ReportDao reportDao;
 	private UserService userService;
+	private SystemService systemSedrvice;
 	
 	@Autowired
 	public void setReportDao(ReportDao reportDao) {
 		this.reportDao = reportDao;
+	}
+	
+	@Autowired
+	public void setSystemSedrvice(SystemService systemSedrvice) {
+		this.systemSedrvice = systemSedrvice;
 	}
 	
 	@Autowired
@@ -44,7 +51,7 @@ public class ReportServiceImpl implements ReportService {
 	
 	public List<ReportEntry> findReportEntries(ReportListFilter filter) {
 		assertUserExists(filter.getUserId());
-		return reportDao.findEntries(filter);
+		return reportDao.findEntriesByFilter(filter);
 	}
 
 	public void saveSystemReportEntry(ReportEntry report) {
@@ -53,8 +60,14 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	private ReportEntry applySystemSettings(ReportEntry report) {
-		int userId = Integer.valueOf(System.getProperty("USER_ID"));
-		report.setReporterId(userId);
+		int systemUserId = systemSedrvice.getSystemUserId();
+		report.setReporterId(systemUserId);
 		return report;
+	}
+	
+	public List<ReportEntry> findReportEntriesForDate(ReportListFilter filter,
+			Date from, Date to) {
+		assertUserExists(filter.getUserId());
+		return reportDao.findEntriesByFilterAndDate(filter, from, to);
 	}
 }	
