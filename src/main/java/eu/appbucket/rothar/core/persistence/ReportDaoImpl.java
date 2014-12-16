@@ -66,7 +66,7 @@ public class ReportDaoImpl implements ReportDao {
 		String query = String.format(SQL_SELECT_REPORT_ENTRIES, filter.getSort(), filter.getOrder());
 		List<ReportEntry> reports = jdbcTempalte.query(
 				query, 
-				new Object[]{filter.getAssetId(), filter.getUserId(), filter.getOffset(), filter.getLimit()},
+				new Object[]{filter.getAssetId(), filter.getUserId(), filter.getLimit(), filter.getOffset()},
 				new ReportMapper());
  		return reports;
 	} 
