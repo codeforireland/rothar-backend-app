@@ -46,6 +46,10 @@
 		<servlet-name>keep-alive</servlet-name>
 		<display-name>KeepAlive</display-name>
 		<servlet-class>eu.appbucket.rothar.web.servlet.KeepAlive</servlet-class>
+		<init-param>
+	        <param-name>version</param-name>
+	        <param-value>Wed Dec 17 22:41:57 GMT 2014</param-value>
+        </init-param>
 	</servlet>
 	
 	<servlet-mapping>
