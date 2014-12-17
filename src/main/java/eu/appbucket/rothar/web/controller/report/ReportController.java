@@ -93,8 +93,8 @@ public class ReportController {
 	@ResponseBody	
 	public List<ReportData> getAnonymousReportsForAssetInDateBoundaries(
 			@PathVariable Integer assetId,
-			@PathVariable Date fromDate,
-			@PathVariable Date toDate,
+			@PathVariable long fromDate,
+			@PathVariable long toDate,
 			@RequestParam(value = "offset", required = false) Integer offset, 
 			@RequestParam(value = "limit", required = false) Integer limit, 
 			@RequestParam(value = "sort", required = false) String sort, 
@@ -102,7 +102,8 @@ public class ReportController {
 		LOGGER.info("getAnonymousReportsForAssetInDateBoundaries: " + assetId);
 		int systemOwnerId = systemService.getSystemUserId();
 		ReportListFilter reportFilter = sanitizeParametersAndBuildReportFilter(systemOwnerId, assetId, offset, limit, sort, order);
-		List<ReportEntry> reportsEntries = this.reportService.findReportEntriesForDate(reportFilter, fromDate, toDate);
+		List<ReportEntry> reportsEntries = this.reportService.findReportEntriesForDate(
+				reportFilter, new Date(fromDate), new Date(toDate));
 		List<ReportData> reportsData = convertReportEntriesToReportDate(reportsEntries);
 		return reportsData;
 	}

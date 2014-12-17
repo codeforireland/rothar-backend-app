@@ -39,7 +39,6 @@ public class ReportDaoImpl implements ReportDao {
 			+ "WHERE "
 			+ "reports.asset_id = ? "
 			+ "AND assets.user_id = ? "
-			+ "AND assets.asset_id = reports.asset_id "
 			+ "AND reports.created >= ? "
 			+ "AND reports.created <= ? "
 			+ "AND assets.asset_id = reports.asset_id "
@@ -87,9 +86,12 @@ public class ReportDaoImpl implements ReportDao {
 		String query = String.format(SQL_SELECT_REPORT_ENTRIES_WITH_DATE_BOUNDARIES, filter.getSort(), filter.getOrder());
 		List<ReportEntry> reports = jdbcTempalte.query(
 				query, 
-				new Object[]{filter.getAssetId(), filter.getUserId(), 
+				new Object[]{
+						filter.getAssetId(), 
+						filter.getUserId(), 
 						from, to,
-						filter.getOffset(), filter.getLimit()},
+						filter.getLimit(), filter.getOffset(), 
+						},
 				new ReportMapper());
  		return reports;
 	}
