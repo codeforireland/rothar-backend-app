@@ -36,7 +36,7 @@ curl -i -H \
 curl -i -H \
 	"Content-Type: application/json" \
 	-X GET \
-	http://adam%40bednarski.pl:adam@api.dev.rothar.appbucket.eu/v2/users/1/assets/20
+	http://adam%40bednarski.pl:adam@localhost:8080/Rothar/v2/users/1/assets/20
 
 # get assets list for the user
 

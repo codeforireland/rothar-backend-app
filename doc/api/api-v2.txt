@@ -19,7 +19,7 @@ curl -i -H \
 curl -i -H \
 	"Content-Type: application/json, Cache-control: no-cache" \
 	-X POST \
-	http://api.dev.rothar.appbucket.eu/v2/users
+	http://localhost:8080/Rothar/v2/users
 
 
 ## ASSETS ##
