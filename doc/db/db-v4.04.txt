@@ -1,0 +1,3 @@
+update assets set tag_code = 'CCCC', user_id = 0 where asset_id = 20;
+update assets set tag_code = 'DDDD', user_id = 0 where asset_id = 30;
+update assets set tag_code = 'EEEE', user_id = 0 where asset_id = 31;

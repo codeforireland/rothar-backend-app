@@ -1,0 +1,2 @@
+update assets set tag_code = 'AAAA', user_id = 0 where asset_id = 10;
+update reports set asset_id = 10 where asset_id = 37;
