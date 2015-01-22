@@ -1,0 +1,8 @@
+update assets set minor = 2 where tag_code = 'AAAA';
+update assets set minor = 1 where tag_code = 'CCCC';
+
+update assets set minor = 2, tag_code = 'A' where asset_id = 20;
+update assets set minor = 1, tag_code = 'C' where asset_id = 10;
+
+update assets set tag_code = 'AAAA' where asset_id = 20;
+update assets set tag_code = 'CCCC' where asset_id = 10;
