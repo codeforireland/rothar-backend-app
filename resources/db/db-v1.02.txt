@@ -1,0 +1,31 @@
+﻿drop table `assets`;
+
+CREATE TABLE `assets` (
+  `asset_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `uuid` varchar(45) NOT NULL,
+  `major` int(4) unsigned NOT NULL,
+  `minor` int(4) unsigned NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `status_id` int(1) unsigned NOT NULL,
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`asset_id`),
+  FOREIGN KEY (`user_id`)
+  	REFERENCES `users`(`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (10, 1, 'f4c36eac-0767-11e4-a4ed-b2227cce2b54', 1, 1, 'Adam bike 1', 1, now());
+
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (20, 2, '2397baa8-1db1-11e4-826c-b2227cce2b54', 1, 1, 'Philip bike 1', 1, now());
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (21, 2, '44b334ec-1db1-11e4-826c-b2227cce2b54', 1, 1, 'Philip bike 2', 1, now());
+
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (30, 3, '60ca9328-1db1-11e4-826c-b2227cce2b54', 1, 1, 'Mark bike 1', 1, now());
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (31, 3, '669425f8-1db1-11e4-826c-b2227cce2b54', 1, 1, 'Mark bike 2', 1, now());
+insert into `assets` (`asset_id`, `user_id`, `uuid`, `major`, `minor`, `description`, `status_id`, `created`) 
+values (32, 3, '6ae50c1c-1db1-11e4-826c-b2227cce2b54', 1, 1, 'Mark bike 3', 1, now());
+

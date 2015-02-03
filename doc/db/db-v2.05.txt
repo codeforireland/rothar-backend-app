@@ -1,7 +1,0 @@
-﻿insert into `users` (`email`, `name`, `activated`, `activation_code`, `password`, `created`)
-values ('rotharapp@gmail.com', 'Rothar App', 1, '6bc4fd71-0bb3-4b42-a509-c2ba16ade405', 'a40bc36c', now()); 
-
-update users set user_id = 0 where user_id = (select * from (SELECT MAX(user_id) FROM users) as t);
-
-update assets set minor=0 where asset_id = 21;
-

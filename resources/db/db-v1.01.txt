@@ -1,0 +1,22 @@
+drop database rothar;
+
+create database rothar;
+
+CREATE USER 'rothar-user'@'localhost' IDENTIFIED BY 'rothar-password';
+
+GRANT ALL PRIVILEGES ON *.* TO 'rothar-user'@'localhost' WITH GRANT OPTION; 
+
+FLUSH PRIVILEGES;
+
+﻿drop table `reports`;
+
+CREATE TABLE `reports` (
+  `report_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `asset_id` int(10) unsigned NOT NULL,
+  `reporter_id` int(10) unsigned NOT NULL,
+  `latitude` double NOT NULL,
+  `longitude` double NOT NULL,
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`report_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
