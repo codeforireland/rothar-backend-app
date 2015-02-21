@@ -1,0 +1,2 @@
+update assets set tag_code = '1234' where asset_id = 20;
+
