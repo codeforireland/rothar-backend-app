@@ -23,7 +23,7 @@ curl -i -H \
 curl -i -H \
 	"Content-Type: application/json" \
 	-X GET \
-	"http://localhost:8080/Rothar/v4/assets/33/reports?limit=10&sort=created"
+	"http://localhost:8080/Rothar/v4/assets/21/reports?limit=10&sort=created"
 
 # retrieve reports for given asset in the give time period (belonging to system user)
 
